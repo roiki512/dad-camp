@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#2c4a8a" />
+  <title>Dad Camp 2026</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="title-wrap">
+        <span class="sun">☀️</span>
+        <div>
+          <h1>Dad Camp <span>2026</span></h1>
+          <p class="tagline">Let's have an amazing day!</p>
+        </div>
+      </div>
+      <div class="week-label" id="weekLabel">—</div>
+    </div>
+    <nav class="daynav" id="dayNav"></nav>
+  </header>
+
+  <main id="app">
+    <p class="loading">Loading this week…</p>
+  </main>
+
+  <div class="actionbar">
+    <a id="icsBtn" class="btn" href="camp.ics" download>📅 Add to calendar (.ics)</a>
+    <button id="shopBtn" class="btn btn-ghost">🛒 Shopping list</button>
+  </div>
+
+  <!-- Detail sheet -->
+  <div class="sheet-backdrop" id="sheetBackdrop" hidden>
+    <section class="sheet" id="sheet" role="dialog" aria-modal="true">
+      <button class="sheet-close" id="sheetClose" aria-label="Close">✕</button>
+      <div id="sheetBody"></div>
+    </section>
+  </div>
+
+  <script src="data/profile.js"></script>
+  <script src="data/library.js"></script>
+  <script src="data/week.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
