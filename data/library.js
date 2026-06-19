@@ -5,6 +5,18 @@ window.DADCAMP_LIBRARY = [
 
   // ───────────────────────── LEARNING BLOCK (10:15–11:00) ─────────────────────────
   {
+    id: "learn-workbooks", slot: "learning", title: "Workbook Time",
+    location: "indoor", duration: "20 min", energy: "low", focus: "workbook",
+    everyDay: true,
+    materials: { have: ["The girls' activity workbooks", "Pencils + eraser", "Crayons/markers"], buy: [] },
+    steps: [
+      "Each girl does 2–3 pages from her workbook (let them pick the pages).",
+      "Sit with them for the tricky bits; keep it short and positive — stop while it's still fun.",
+      "A sticker or a star when they finish today's pages."
+    ],
+    rainBackup: null, tags: ["workbook", "learning", "calm", "daily"]
+  },
+  {
     id: "learn-readaloud", slot: "learning", title: "Read-Aloud + Story Talk",
     location: "indoor", duration: "45 min", energy: "low", focus: "reading",
     materials: { have: ["A library/picture chapter book"], buy: [] },

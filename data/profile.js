@@ -29,7 +29,8 @@ window.DADCAMP_PROFILE = {
     { time: "09:00-09:15", slot: "get-ready", title: "Get Ready", note: "dress, teeth, make beds", fixed: true },
     { time: "09:15-09:45", slot: "breakfast", title: "Breakfast", fixed: true },
     { time: "09:45-10:15", slot: "morning-walk", title: "Morning Walk", fixed: true },
-    { time: "10:15-11:00", slot: "learning", title: "Learning Block", fillable: true },
+    { time: "10:15-10:35", slot: "learning", title: "Workbook Time", note: "daily — activity workbooks", fillable: true },
+    { time: "10:35-11:00", slot: "learning", title: "Learning Block", fillable: true },
     { time: "11:00-12:30", slot: "main", title: "Main Activity", fillable: true },
     { time: "12:30-13:15", slot: "lunch", title: "Lunch", fixed: true },
     { time: "13:15-14:00", slot: "quiet", title: "Quiet Time", fillable: true },
@@ -76,6 +77,7 @@ window.DADCAMP_PROFILE = {
     libraryRefreshEvery: "2 weeks",
     noRepeatCraftWithinWeek: true,
     everyOutdoorSlotNeedsRainBackup: true,
+    dailyWorkbook: "Include 'learn-workbooks' (Workbook Time) EVERY day — a short 20-min block at the start of the Learning Block. On full-day-outing days, add it as an optional short evening block instead.",
     learningRotation: { Mon: "reading", Tue: "math", Wed: "Hebrew", Thu: "writing", Fri: "science" }
   }
 };

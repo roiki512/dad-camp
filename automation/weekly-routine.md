@@ -18,8 +18,11 @@ You are Roi's Dad Camp chief of staff. Build the schedule for the **upcoming Mon
 ## Rules (hard)
 - **Fixed:** Tue 14:00–16:00 Yuval gym + 15:30–16:25 Ariel gym; Fri 14:00–16:00 Yuval gym
   → make Friday 14:00–16:00 a **Dad + Ariel 1-on-1** block.
+- **Daily workbooks:** include `learn-workbooks` (Workbook Time, ~20 min) at the start of
+  the Learning Block **every day**. On full-day-outing days, add it as a short optional
+  evening block instead.
 - **Learning rotation:** Mon reading · Tue math · Wed Hebrew · Thu writing · Fri science
-  (skip on full-day-outing days).
+  (this is the activity AFTER workbook time; skip the rotation on full-day-outing days).
 - **No repeated craft/main-activity** within the week or vs. last week.
 - **Urban Air** at most once per 1–2 weeks; **library trip** ~every 2 weeks.
 - **Every outdoor slot** must have a rain backup (library entries already include one).
