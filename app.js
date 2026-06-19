@@ -19,6 +19,8 @@
   var app = document.getElementById("app");
   var dayNav = document.getElementById("dayNav");
   var weekLabel = document.getElementById("weekLabel");
+  var backdrop = document.getElementById("sheetBackdrop");
+  var sheetBody = document.getElementById("sheetBody");
 
   if (!WEEK || !WEEK.days) {
     app.innerHTML = '<p class="loading">No week is scheduled yet. Ask Claude to generate one!</p>';
@@ -104,9 +106,6 @@
   }
 
   /* ───────────── detail sheet ───────────── */
-  var backdrop = document.getElementById("sheetBackdrop");
-  var sheetBody = document.getElementById("sheetBody");
-
   function wireSheet() {
     app.addEventListener("click", function (e) {
       var b = e.target.closest(".block[data-di]");
@@ -117,6 +116,7 @@
     });
     document.getElementById("sheetClose").addEventListener("click", closeSheet);
     backdrop.addEventListener("click", function (e) { if (e.target === backdrop) closeSheet(); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeSheet(); });
   }
 
   function openDetail(day, blk) {
@@ -168,7 +168,7 @@
       btn.textContent = done[key] ? "✓ Done!" : "Mark as done";
       renderDays();
     });
-    backdrop.hidden = false;
+    backdrop.classList.add("open");
   }
 
   function openShoppingList() {
@@ -184,10 +184,10 @@
       html += "<h4>Gather from home</h4><ul>" + shop.have.map(li).join("") + "</ul>";
     }
     sheetBody.innerHTML = html;
-    backdrop.hidden = false;
+    backdrop.classList.add("open");
   }
 
-  function closeSheet() { backdrop.hidden = true; }
+  function closeSheet() { backdrop.classList.remove("open"); }
 
   /* ───────────── helpers ───────────── */
   function resolve(blk) {

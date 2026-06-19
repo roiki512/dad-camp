@@ -137,8 +137,9 @@ main { max-width: 760px; margin: 0 auto; padding: 14px 12px; }
 /* ── Detail sheet ── */
 .sheet-backdrop {
   position: fixed; inset: 0; z-index: 40; background: rgba(0,0,0,.45);
-  display: flex; align-items: flex-end; justify-content: center;
+  display: none; align-items: flex-end; justify-content: center;
 }
+.sheet-backdrop.open { display: flex; }
 .sheet {
   background: #fff; width: 100%; max-width: 640px;
   border-radius: 20px 20px 0 0; padding: 20px 18px 28px;
@@ -173,4 +174,27 @@ main { max-width: 760px; margin: 0 auto; padding: 14px 12px; }
 @media (min-width: 720px) {
   .sheet-backdrop { align-items: center; }
   .sheet { border-radius: 20px; }
+}
+
+/* ── Weekly columns view (wide screens) — Mon–Fri side by side ── */
+@media (min-width: 900px) {
+  main { max-width: 1500px; padding: 16px; }
+  .daynav { display: none; }
+  #app {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; align-items: start;
+  }
+  .day { margin-bottom: 0; scroll-margin-top: 0; }
+  .day-head { flex-direction: column; align-items: flex-start; gap: 2px; padding: 10px 12px; }
+  .day-head h2 { font-size: 16px; }
+  .daytype-banner { font-size: 11px; padding: 6px 10px; }
+  .blocks { padding: 6px; }
+  /* compact blocks: stripe + time on row 1, title wraps below */
+  .block { flex-wrap: wrap; padding: 7px 8px; margin: 5px 0; gap: 5px; }
+  .block .stripe { flex: 0 0 5px; }
+  .block .time { order: 2; width: auto; flex: 1 1 auto; font-size: 11px; }
+  .block .body { order: 3; flex: 1 1 100%; }
+  .block .b-title { font-size: 12.5px; }
+  .block .b-sub { font-size: 11px; }
+  .block .chev { display: none; }
+  .tag { display: inline-block; font-size: 9px; padding: 1px 5px; margin-bottom: 3px; }
 }
