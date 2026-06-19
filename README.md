@@ -53,9 +53,11 @@ Claude edits `data/week.js` + `camp.ics`, and (once deployed) pushes so the site
 ## Setup status
 
 - [x] **Hosted** on GitHub Pages → https://roiki512.github.io/dad-camp/ (repo: roiki512/dad-camp)
-- [ ] **Set your city** in `data/profile.js` (for the weather check)
-- [ ] **Email:** connect Gmail so the routines can email you the weekly plan + morning brief
-- [ ] **Schedule the two routines** (`automation/*.md`): Saturday ~08:00 and weekdays 06:30
+- [x] **City set** — Cedar Park, TX (America/Chicago) for the weather check
+- [x] **Scheduled tasks created** — `dadcamp-weekly-plan` (Sat 08:00) + `dadcamp-morning-brief` (weekdays 06:30). They run while the Claude app is open (or on next launch). Manage them in the app's **Scheduled** sidebar.
+- [ ] **Email (Gmail):** not linked yet. Add the Gmail connector in the Claude app (Settings → Connectors). The tasks already email automatically once an email tool is available; until then delivery = the task's completion notification + the auto-updated site.
+
+> **Note:** scheduled tasks only fire while the Claude app is running. If it's closed at 6:30am, the morning brief runs the next time you open the app.
 
 ## Adding your own activities
 
