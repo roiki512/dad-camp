@@ -3,9 +3,9 @@
 // Edit freely; the web app and routines both consume window.DADCAMP_PROFILE.
 window.DADCAMP_PROFILE = {
   campName: "Dad Camp 2026",
-  // Used by the daily routine to fetch weather. UPDATE THIS to your city.
-  city: "TBD — set your city/area here",
-  timezone: "Asia/Jerusalem",
+  // Used by the daily routine to fetch weather.
+  city: "Cedar Park, TX (Austin area)",
+  timezone: "America/Chicago",
   kids: [
     {
       name: "Yuval",
