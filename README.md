@@ -27,8 +27,10 @@ that keep it filled and email you a heads-up.
 
 ## Look at it on your phone
 
-Once deployed (see Setup), open the site URL and **Add to Home Screen**. Until then,
-run it locally:
+**Live at → https://roiki512.github.io/dad-camp/** — open it on your phone and
+**Add to Home Screen** so it feels like an app.
+
+To run locally instead:
 
 ```
 python -m http.server 5517 --directory .
@@ -48,13 +50,12 @@ Just tell Claude in chat, e.g.:
 
 Claude edits `data/week.js` + `camp.ics`, and (once deployed) pushes so the site updates.
 
-## Setup (to finish — see the plan)
+## Setup status
 
-1. **Set your city** in `data/profile.js` (for the weather check).
-2. **Host it:** push this folder to GitHub and enable **GitHub Pages** → you get a public URL.
-3. **Deploy credential:** a token so the Saturday routine can push updates.
-4. **Email:** connect Gmail so the routines can email you the weekly plan + morning brief.
-5. **Schedule the two routines** (`automation/*.md`): Saturday ~08:00 and weekdays 06:30.
+- [x] **Hosted** on GitHub Pages → https://roiki512.github.io/dad-camp/ (repo: roiki512/dad-camp)
+- [ ] **Set your city** in `data/profile.js` (for the weather check)
+- [ ] **Email:** connect Gmail so the routines can email you the weekly plan + morning brief
+- [ ] **Schedule the two routines** (`automation/*.md`): Saturday ~08:00 and weekdays 06:30
 
 ## Adding your own activities
 
