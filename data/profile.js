@@ -36,9 +36,7 @@ window.DADCAMP_PROFILE = {
     { time: "13:15-14:00", slot: "quiet", title: "Quiet Time", fillable: true },
     { time: "14:00-16:00", slot: "afternoon", title: "Afternoon Activity", fillable: true },
     { time: "16:00-17:30", slot: "outdoor", title: "Outdoor Time", fillable: true },
-    { time: "17:30-18:30", slot: "free", title: "Free Choice / Family", fillable: true },
-    { time: "19:00", slot: "dinner", title: "Dinner", fixed: true },
-    { time: "20:00", slot: "bedtime", title: "Bedtime", fixed: true }
+    { time: "17:30-18:30", slot: "free", title: "Free Choice / Family", fillable: true }
   ],
 
   // Recurring fixed commitments the generator must always honor.

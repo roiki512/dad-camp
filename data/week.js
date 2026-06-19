@@ -27,8 +27,6 @@ window.DADCAMP_WEEK = {
         { time: "14:00-16:00", slot: "afternoon", title: "Library Trip (refresh books)", activityId: "aft-library", note: "kick off the week with a fresh stack of books" },
         { time: "16:00-17:30", slot: "outdoor", title: "Playground", activityId: "out-playground" },
         { time: "17:30-18:30", slot: "free", title: "Family Board Game", activityId: "free-boardgame" },
-        { time: "19:00", slot: "dinner", title: "Dinner", fixed: true },
-        { time: "20:00", slot: "bedtime", title: "Bedtime", fixed: true }
       ]
     },
 
@@ -54,8 +52,6 @@ window.DADCAMP_WEEK = {
                     steps: ["Pack water + snack for after.", "Drop Yuval at 14:00; bring Ariel for 15:30.", "Both done by 16:25 — easy evening after."] } },
         { time: "16:00-17:30", slot: "outdoor", title: "Giant Bubbles", activityId: "out-bubbles", note: "low-key after gym" },
         { time: "17:30-18:30", slot: "free", title: "Build a Blanket Fort", activityId: "free-fort" },
-        { time: "19:00", slot: "dinner", title: "Dinner", fixed: true },
-        { time: "20:00", slot: "bedtime", title: "Bedtime", fixed: true }
       ]
     },
 
@@ -79,8 +75,6 @@ window.DADCAMP_WEEK = {
         { time: "14:00-16:00", slot: "afternoon", title: "Pottery-Painting Studio Outing", activityId: "aft-pottery-studio" },
         { time: "16:00-17:30", slot: "outdoor", title: "Neighborhood Pool", activityId: "out-pool", weatherNote: "if weather permits" },
         { time: "17:30-18:30", slot: "free", title: "Dance Party / Music", activityId: "free-danceparty" },
-        { time: "19:00", slot: "dinner", title: "Dinner", fixed: true },
-        { time: "20:00", slot: "bedtime", title: "Bedtime", fixed: true }
       ]
     },
 
@@ -104,8 +98,6 @@ window.DADCAMP_WEEK = {
         { time: "14:00-16:00", slot: "afternoon", title: "Big Baking Project", activityId: "aft-bigbake", note: "indoor — beats the afternoon heat (no car needed)" },
         { time: "16:00-17:30", slot: "outdoor", title: "Backyard Water Play", activityId: "out-waterplay", weatherNote: "hot & dry — perfect for water; all in the backyard" },
         { time: "17:30-18:30", slot: "free", title: "Kids Help Make Dinner", activityId: "free-cookdinner" },
-        { time: "19:00", slot: "dinner", title: "Dinner", fixed: true },
-        { time: "20:00", slot: "bedtime", title: "Bedtime", fixed: true }
       ]
     },
 
@@ -134,8 +126,6 @@ window.DADCAMP_WEEK = {
                     steps: ["Special solo time while Yuval is at gym.", "Ariel picks: ice-cream + park, her own craft, a bike ride, or baking together.", "Little tradition to look forward to every Friday."] } },
         { time: "16:00-17:30", slot: "outdoor", title: "Neighborhood Pool", activityId: "out-pool", weatherNote: "98° and dry — pool is the move (3-min walk)" },
         { time: "17:30-18:30", slot: "free", title: "Family Movie Night (weekly screen treat)", activityId: "free-movie", note: "the one capped screen slot of the week" },
-        { time: "19:00", slot: "dinner", title: "Dinner", fixed: true },
-        { time: "20:00", slot: "bedtime", title: "Bedtime", fixed: true }
       ]
     }
   ],
