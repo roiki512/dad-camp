@@ -10,6 +10,11 @@ window.DADCAMP_WEEK = {
     /* ───── MONDAY — standard · reading + salt dough + library ───── */
     {
       date: "2026-06-22", weekday: "Monday", dayType: "standard",
+      weather: { icon: "⛅", label: "Partly cloudy", high: 96, low: 75, pop: 1, hourly: [
+        { t: "08:00", temp: 77, pop: 0, ic: "🌤️" }, { t: "10:00", temp: 84, pop: 0, ic: "☀️" },
+        { t: "12:00", temp: 90, pop: 0, ic: "☀️" }, { t: "14:00", temp: 95, pop: 0, ic: "☀️" },
+        { t: "16:00", temp: 96, pop: 0, ic: "☀️" }, { t: "18:00", temp: 95, pop: 0, ic: "☀️" },
+        { t: "20:00", temp: 88, pop: 1, ic: "☀️" } ] },
       blocks: [
         { time: "09:00-09:15", slot: "get-ready", title: "Get Ready", note: "dress, teeth, make beds", fixed: true },
         { time: "09:15-09:45", slot: "breakfast", title: "Breakfast", fixed: true },
@@ -30,6 +35,11 @@ window.DADCAMP_WEEK = {
     /* ───── TUESDAY — gym day · math + bracelets ───── */
     {
       date: "2026-06-23", weekday: "Tuesday", dayType: "gym-day", dayTypeLabel: "🤸 Gymnastics Day",
+      weather: { icon: "🌤️", label: "Sunny (storms clear overnight)", high: 96, low: 75, pop: 1, hourly: [
+        { t: "08:00", temp: 79, pop: 0, ic: "☁️" }, { t: "10:00", temp: 84, pop: 0, ic: "☁️" },
+        { t: "12:00", temp: 90, pop: 0, ic: "☀️" }, { t: "14:00", temp: 94, pop: 0, ic: "☀️" },
+        { t: "16:00", temp: 96, pop: 0, ic: "☀️" }, { t: "18:00", temp: 95, pop: 0, ic: "☀️" },
+        { t: "20:00", temp: 90, pop: 1, ic: "🌤️" } ] },
       blocks: [
         { time: "09:00-09:15", slot: "get-ready", title: "Get Ready", note: "dress, teeth, make beds", fixed: true },
         { time: "09:15-09:45", slot: "breakfast", title: "Breakfast", fixed: true },
@@ -52,6 +62,11 @@ window.DADCAMP_WEEK = {
     /* ───── WEDNESDAY — standard · Hebrew + rock painting + pottery outing + pool ───── */
     {
       date: "2026-06-24", weekday: "Wednesday", dayType: "standard",
+      weather: { icon: "☁️", label: "Overcast", high: 96, low: 74, pop: 4, hourly: [
+        { t: "08:00", temp: 77, pop: 1, ic: "☁️" }, { t: "10:00", temp: 84, pop: 1, ic: "☁️" },
+        { t: "12:00", temp: 90, pop: 1, ic: "⛅" }, { t: "14:00", temp: 94, pop: 3, ic: "🌤️" },
+        { t: "16:00", temp: 96, pop: 3, ic: "☀️" }, { t: "18:00", temp: 95, pop: 3, ic: "☀️" },
+        { t: "20:00", temp: 90, pop: 4, ic: "☀️" } ] },
       blocks: [
         { time: "09:00-09:15", slot: "get-ready", title: "Get Ready", note: "dress, teeth, make beds", fixed: true },
         { time: "09:15-09:45", slot: "breakfast", title: "Breakfast", fixed: true },
@@ -69,40 +84,39 @@ window.DADCAMP_WEEK = {
       ]
     },
 
-    /* ───── THURSDAY — FULL-DAY OUTING · nature hike + picnic (grid replaced) ───── */
+    /* ───── THURSDAY — NO-CAR DAY · writing + tie-dye + baking + walkable water ───── */
     {
-      date: "2026-06-25", weekday: "Thursday", dayType: "full-day-outing", dayTypeLabel: "🌄 Full-Day Outing — Nature Hike & Picnic",
+      date: "2026-06-25", weekday: "Thursday", dayType: "no-car", dayTypeLabel: "🚗 No-Car Day — staying local (walkable + at-home)",
+      weather: { icon: "☁️", label: "Overcast", high: 96, low: 72, pop: 4, hourly: [
+        { t: "08:00", temp: 75, pop: 1, ic: "⛅" }, { t: "10:00", temp: 82, pop: 1, ic: "☁️" },
+        { t: "12:00", temp: 88, pop: 1, ic: "☁️" }, { t: "14:00", temp: 93, pop: 2, ic: "☁️" },
+        { t: "16:00", temp: 96, pop: 2, ic: "⛅" }, { t: "18:00", temp: 96, pop: 2, ic: "🌤️" },
+        { t: "20:00", temp: 91, pop: 2, ic: "🌤️" } ] },
       blocks: [
-        { time: "09:00-09:15", slot: "get-ready", title: "Get Ready", note: "dress for the trail, hats, sunscreen", fixed: true },
-        { time: "09:15-09:45", slot: "breakfast", title: "Breakfast", note: "good fuel + pack the picnic together", fixed: true },
-        { time: "10:00-15:00", slot: "afternoon", big: true, title: "Nature Hike + Picnic",
-          weatherNote: "If rain: swap to the children's museum / science center instead",
-          custom: {
-            materials: {
-              have: ["Backpack", "Water bottles", "Hats + sunscreen", "First-aid basics", "Bag for nature treasures", "Magnifying glass"],
-              buy: ["Picnic food — sandwiches, fruit, snacks"]
-            },
-            steps: [
-              "Pick an easy, kid-friendly trail or nature reserve (15–45 min drive).",
-              "Hike at their pace; do a mini scavenger hunt (feather, smooth rock, Y-stick, something red).",
-              "Stop for the picnic at a nice spot; rest.",
-              "Collect a few treasures for a craft later in the week.",
-              "Head home by ~15:00 for a calm rest."
-            ],
-            youtube: "https://www.youtube.com/results?search_query=hiking+with+kids+nature+scavenger+hunt+ideas"
-          }
-        },
-        { time: "16:00-17:00", slot: "quiet", title: "Rest + Audiobook", activityId: "quiet-audiobook", note: "wind down after the big day" },
-        { time: "17:00-17:15", slot: "learning", title: "Workbook Time (optional)", activityId: "learn-workbooks", note: "only if they're up for it after the hike — 1 easy page is fine" },
+        { time: "09:00-09:15", slot: "get-ready", title: "Get Ready", note: "dress, teeth, make beds", fixed: true },
+        { time: "09:15-09:45", slot: "breakfast", title: "Breakfast", fixed: true },
+        { time: "09:45-10:15", slot: "morning-walk", title: "Morning Walk", fixed: true },
+        { time: "10:15-10:35", slot: "learning", title: "Workbook Time", activityId: "learn-workbooks" },
+        { time: "10:35-11:00", slot: "learning", title: "Comic-Strip Journal (writing)", activityId: "learn-journal-comic" },
+        { time: "11:00-12:30", slot: "main", title: "Tie-Dye T-Shirts", activityId: "main-tiedye", note: "out in the backyard — dry day, no car needed" },
+        { time: "12:30-13:15", slot: "lunch", title: "Lunch", fixed: true },
+        { time: "13:15-14:00", slot: "quiet", title: "Calm Sensory Bin", activityId: "quiet-sensorybin" },
+        { time: "14:00-16:00", slot: "afternoon", title: "Big Baking Project", activityId: "aft-bigbake", note: "indoor — beats the afternoon heat (no car needed)" },
+        { time: "16:00-17:30", slot: "outdoor", title: "Backyard Water Play", activityId: "out-waterplay", weatherNote: "hot & dry — perfect for water; all in the backyard" },
         { time: "17:30-18:30", slot: "free", title: "Kids Help Make Dinner", activityId: "free-cookdinner" },
         { time: "19:00", slot: "dinner", title: "Dinner", fixed: true },
-        { time: "20:00", slot: "bedtime", title: "Bedtime", note: "earlier wind-down — they'll be tired!", fixed: true }
+        { time: "20:00", slot: "bedtime", title: "Bedtime", fixed: true }
       ]
     },
 
     /* ───── FRIDAY — gym (Yuval) + Dad & Ariel 1-on-1 · science + origami + movie night ───── */
     {
       date: "2026-06-26", weekday: "Friday", dayType: "gym-day", dayTypeLabel: "🤸 Yuval Gym · 👧 Dad + Ariel Time",
+      weather: { icon: "⛅", label: "Partly cloudy", high: 98, low: 73, pop: 3, hourly: [
+        { t: "08:00", temp: 76, pop: 1, ic: "🌤️" }, { t: "10:00", temp: 82, pop: 1, ic: "⛅" },
+        { t: "12:00", temp: 90, pop: 1, ic: "⛅" }, { t: "14:00", temp: 95, pop: 3, ic: "🌤️" },
+        { t: "16:00", temp: 98, pop: 3, ic: "🌤️" }, { t: "18:00", temp: 96, pop: 3, ic: "🌤️" },
+        { t: "20:00", temp: 91, pop: 2, ic: "🌤️" } ] },
       blocks: [
         { time: "09:00-09:15", slot: "get-ready", title: "Get Ready", note: "dress, teeth, make beds", fixed: true },
         { time: "09:15-09:45", slot: "breakfast", title: "Breakfast", fixed: true },
@@ -118,7 +132,7 @@ window.DADCAMP_WEEK = {
         { time: "14:00-16:00", slot: "free", title: "Dad + Ariel 1-on-1", kid: "Ariel",
           custom: { materials: { have: ["Let Ariel choose!"], buy: [] },
                     steps: ["Special solo time while Yuval is at gym.", "Ariel picks: ice-cream + park, her own craft, a bike ride, or baking together.", "Little tradition to look forward to every Friday."] } },
-        { time: "16:00-17:30", slot: "outdoor", title: "Backyard Water Play", activityId: "out-waterplay", weatherNote: "if weather permits" },
+        { time: "16:00-17:30", slot: "outdoor", title: "Neighborhood Pool", activityId: "out-pool", weatherNote: "98° and dry — pool is the move (3-min walk)" },
         { time: "17:30-18:30", slot: "free", title: "Family Movie Night (weekly screen treat)", activityId: "free-movie", note: "the one capped screen slot of the week" },
         { time: "19:00", slot: "dinner", title: "Dinner", fixed: true },
         { time: "20:00", slot: "bedtime", title: "Bedtime", fixed: true }
@@ -131,9 +145,10 @@ window.DADCAMP_WEEK = {
       "Embroidery floss or yarn (Tue — friendship bracelets)",
       "Pony / letter beads — optional (Tue — bracelets)",
       "Paint pens — optional (Wed — rock painting)",
+      "Tie-dye kit + a few white shirts/socks (Thu — tie-dye)",
+      "Baking project ingredients — pick a recipe (Thu — big bake)",
       "Food coloring (Fri — baking-soda volcano)",
-      "Water balloons — optional (Fri — water play)",
-      "Picnic food: sandwiches, fruit, snacks (Thu — hike)",
+      "Water balloons — optional (Thu — water play)",
       "Pottery studio fee — cash/card (Wed — pottery outing)"
     ],
     have: [
@@ -141,11 +156,12 @@ window.DADCAMP_WEEK = {
       "Paint + brushes (Mon/Wed crafts)",
       "Deck of cards (Tue — math war)",
       "Library cards + books to return (Mon — library)",
-      "Swimsuits, towels, sunscreen, goggles (Wed pool / Fri water play)",
+      "Swimsuits, towels, sunscreen, goggles (Wed + Fri pool, Thu water play)",
+      "Rubber bands + gloves (Thu — tie-dye)",
+      "Big container + rice/beans (Thu — sensory bin)",
       "Square/origami paper (Fri — origami)",
       "Baking soda, vinegar, dish soap (Fri — volcano)",
-      "Board games + blankets (fort, family time)",
-      "Backpack, hats, first-aid, water bottles (Thu — hike)"
+      "Board games + blankets (fort, family time)"
     ]
   }
 };

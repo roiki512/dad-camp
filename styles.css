@@ -76,7 +76,23 @@ main { max-width: 760px; margin: 0 auto; padding: 14px 12px; }
   padding: 12px 16px; border-bottom: 2px solid #f0ece0;
 }
 .day-head h2 { margin: 0; font-size: 18px; }
+.day-head-right { display: flex; align-items: center; gap: 8px; }
 .day-head .date { color: var(--muted); font-size: 13px; }
+.wx {
+  border: none; cursor: pointer; background: #eef4ff; color: var(--navy-dark);
+  font-weight: 700; font-size: 12.5px; padding: 4px 9px; border-radius: 999px;
+  white-space: nowrap;
+}
+.wx:active { transform: scale(.96); }
+.wx-hours { list-style: none; padding: 0; margin: 8px 0; }
+.wx-hours li {
+  display: flex; align-items: center; padding: 9px 6px;
+  border-bottom: 1px solid #f0ece0; font-size: 15px;
+}
+.wx-hours .wh-t { flex: 0 0 64px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.wx-hours .wh-i { flex: 0 0 36px; text-align: center; font-size: 18px; }
+.wx-hours .wh-temp { flex: 1; font-weight: 700; }
+.wx-hours .wh-pop { flex: 0 0 70px; text-align: right; color: var(--c-afternoon); font-size: 13px; }
 .day.is-today { outline: 3px solid #ffd34d; }
 .today-pill {
   background: #ffd34d; color: var(--navy-dark); font-size: 11px; font-weight: 700;

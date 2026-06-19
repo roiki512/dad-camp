@@ -78,6 +78,8 @@ window.DADCAMP_PROFILE = {
     noRepeatCraftWithinWeek: true,
     everyOutdoorSlotNeedsRainBackup: true,
     dailyWorkbook: "Include 'learn-workbooks' (Workbook Time) EVERY day — a short 20-min block at the start of the Learning Block. On full-day-outing days, add it as an optional short evening block instead.",
+    thursdayNoCar: "Most Thursdays there is NO CAR. Plan Thursdays car-free: only walkable/at-home options (the 3-min-walk pool, backyard, neighborhood park/playground/walks, indoor crafts/baking). NO drive-required activities on Thursday (no Urban Air, pottery studio, museums, trail hikes, library if not walkable). Mark Thursday dayType 'no-car'.",
+    weatherAware: "Each week, fetch the Cedar Park forecast and store per-day weather in week.js as weather:{icon,label,high,low,pop,hourly:[{t,temp,pop,ic}]} (daytime hours ~08:00–20:00). PLAN around it: don't schedule hikes or outdoor-heavy outings on rainy/stormy days; on hot dry days favor water (pool/splash/backyard water) and keep the hottest afternoon hours indoor/shaded; every outdoor block still needs a rain backup. Weather forecasts shift — the daily 6:30 brief makes the final call.",
     learningRotation: { Mon: "reading", Tue: "math", Wed: "Hebrew", Thu: "writing", Fri: "science" }
   }
 };

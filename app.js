@@ -59,9 +59,13 @@
       sec.className = "day" + (day.date === todayISO ? " is-today" : "");
       sec.id = "day-" + i;
 
+      var wx = day.weather
+        ? '<button class="wx" data-wx="' + i + '" title="Tap for the hourly forecast">' +
+            day.weather.icon + " " + day.weather.high + "°</button>"
+        : "";
       var head = '<div class="day-head"><h2>' + day.weekday +
         (day.date === todayISO ? '<span class="today-pill">TODAY</span>' : "") +
-        '</h2><span class="date">' + longDate(day.date) + "</span></div>";
+        '</h2><span class="day-head-right"><span class="date">' + longDate(day.date) + "</span>" + wx + "</span></div>";
 
       var banner = "";
       if (day.dayType && day.dayType !== "standard") {
@@ -108,6 +112,8 @@
   /* ───────────── detail sheet ───────────── */
   function wireSheet() {
     app.addEventListener("click", function (e) {
+      var wx = e.target.closest(".wx");
+      if (wx) { openWeather(WEEK.days[+wx.getAttribute("data-wx")]); return; }
       var b = e.target.closest(".block[data-di]");
       if (!b) return;
       var day = WEEK.days[+b.getAttribute("data-di")];
@@ -187,6 +193,26 @@
     backdrop.classList.add("open");
   }
 
+  function openWeather(day) {
+    var w = day.weather;
+    if (!w) return;
+    var html = '<span class="tag" style="background:var(--c-afternoon)">Weather</span>';
+    html += "<h3>" + w.icon + " " + day.weekday + "</h3>";
+    html += '<div class="meta">' + w.label + " · High " + w.high + "° / Low " + w.low +
+      "° · " + w.pop + "% chance of rain</div>";
+    if (w.hourly && w.hourly.length) {
+      html += "<h4>Through the day</h4><ul class='wx-hours'>";
+      html += w.hourly.map(function (h) {
+        return "<li><span class='wh-t'>" + h.t + "</span><span class='wh-i'>" + h.ic +
+          "</span><span class='wh-temp'>" + h.temp + "°</span><span class='wh-pop'>" +
+          (h.pop > 0 ? "💧" + h.pop + "%" : "—") + "</span></li>";
+      }).join("");
+      html += "</ul>";
+    }
+    sheetBody.innerHTML = html;
+    backdrop.classList.add("open");
+  }
+
   function closeSheet() { backdrop.classList.remove("open"); }
 
   /* ───────────── helpers ───────────── */
@@ -202,7 +228,8 @@
   function capitalize(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
   function prettyDayType(t) {
     return { "full-day-outing": "🌄 Full-Day Outing", "half-day-outing": "🚲 Half-Day Outing",
-      "low-key": "🛋️ Low-Key Day", "gym-day": "🤸 Gymnastics Day" }[t] || t;
+      "low-key": "🛋️ Low-Key Day", "gym-day": "🤸 Gymnastics Day",
+      "no-car": "🚗 No-Car Day — staying local" }[t] || t;
   }
   function shortDate(iso) { var d = new Date(iso + "T00:00:00"); return (d.getMonth() + 1) + "/" + d.getDate(); }
   function longDate(iso) {
