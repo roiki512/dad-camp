@@ -324,6 +324,7 @@ window.DADCAMP_LIBRARY = [
   {
     id: "quiet-soloreading", slot: "quiet", title: "Cozy Solo Reading",
     location: "indoor", duration: "45 min", energy: "low",
+    requires: "fresh books — schedule ONLY on the 1–2 days AFTER a library visit",
     materials: { have: ["Library books", "Blanket/pillow fort"], buy: [] },
     steps: ["Build a quick cozy nook.", "Each reads her own books quietly.", "Optional: a sticker for every book finished this week."],
     rainBackup: null, tags: ["calm", "reading", "screen-free"]
