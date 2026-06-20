@@ -27,6 +27,10 @@ You are Roi's Dad Camp chief of staff. Build the schedule for the **upcoming Mon
 - **Thursdays = NO CAR** (most weeks): car-free only — walkable pool (3 min), backyard,
   neighborhood park/playground/walks, indoor crafts/baking. NO drive-required activities
   Thursday (no Urban Air, pottery studio, museum, trail hike). Set Thursday `dayType: "no-car"`.
+- **Wednesday piano (Ariel) 16:45–17:30, FIXED** — add a `slot: "piano"` block for Ariel +
+  a parallel quiet free block for Yuval; keep 16:00–16:45 light; don't collide or overload Wednesday.
+- **2nd water/pool day = a CHOICE:** if water appears more than once in a week, make the second
+  one a choice block (`options: ["out-pool","out-trampoline","out-waterplay"]`, no `activityId`).
 - **Weather-aware** (see step 2): plan outings on good-weather days; every outdoor block
   keeps a rain backup.
 - **Daily workbooks:** include `learn-workbooks` (Workbook Time, ~20 min) at the start of
@@ -50,3 +54,4 @@ You are Roi's Dad Camp chief of staff. Build the schedule for the **upcoming Mon
 Match the existing `data/week.js` structure exactly (see the current file): `days[]` with
 `date`, `weekday`, `dayType`, optional `dayTypeLabel`, and `blocks[]` referencing
 `activityId` from the library or carrying inline `custom` details; plus a `shoppingList`.
+A block may instead carry `options: [activityId, …]` (no `activityId`) to offer the girls a choice.

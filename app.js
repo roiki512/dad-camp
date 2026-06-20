@@ -11,7 +11,7 @@
 
   var SLOT_NAMES = {
     learning: "Learning", main: "Main Activity", quiet: "Quiet Time",
-    afternoon: "Afternoon", outdoor: "Outdoor", free: "Free / Family", gym: "Gymnastics"
+    afternoon: "Afternoon", outdoor: "Outdoor", free: "Free / Family", gym: "Gymnastics", piano: "Piano"
   };
   var DONE_KEY = "dadcamp-done";
   var done = loadDone();
@@ -88,9 +88,14 @@
     var key = doneKey(day.date, blk.time, slot);
     var clickable = !isFixed;
 
-    var sub = blk.note || (det && det.location ? capitalize(det.location) + (det.duration ? " · " + det.duration : "") : "");
-    if (blk.kid) sub = (blk.kid ? blk.kid + " · " : "") + (sub || "");
-    if (blk.weatherNote) sub = blk.weatherNote + (sub ? " · " + sub : "");
+    var sub;
+    if (blk.options) {
+      sub = "Pick one: " + blk.options.map(function (id) { return (libById[id] || {}).title || id; }).join(" · ");
+    } else {
+      sub = blk.note || (det && det.location ? capitalize(det.location) + (det.duration ? " · " + det.duration : "") : "");
+    }
+    if (blk.kid) sub = blk.kid + " · " + (sub || "");
+    if (blk.weatherNote && !blk.options) sub = blk.weatherNote + (sub ? " · " + sub : "");
 
     var classes = "block slot-" + slot + (isFixed ? " fixed" : "") + (blk.big ? " big-block" : "") + (done[key] ? " done" : "");
     var tag = clickable ? '<span class="tag slot-' + slot + '">' + (SLOT_NAMES[slot] || slot) + "</span>" : "";
@@ -126,8 +131,9 @@
   }
 
   function openDetail(day, blk) {
-    var det = resolve(blk) || {};
     var slot = blk.slot || "main";
+    if (blk.options) { openChoice(blk, slot); return; }
+    var det = resolve(blk) || {};
     var title = blk.title || det.title || "Activity";
     var key = doneKey(day.date, blk.time, slot);
 
@@ -142,25 +148,7 @@
     if (blk.note) html += "<p>" + blk.note + "</p>";
     if (blk.weatherNote) html += '<div class="rain">🌤️ ' + blk.weatherNote + "</div>";
 
-    var mats = det.materials || (blk.custom && blk.custom.materials);
-    if (mats) {
-      if (mats.have && mats.have.length) {
-        html += "<h4>Have at home</h4><ul>" + mats.have.map(li).join("") + "</ul>";
-      }
-      if (mats.buy && mats.buy.length) {
-        html += "<h4>To buy 🛒</h4><ul class='mat-buy'>" + mats.buy.map(li).join("") + "</ul>";
-      }
-    }
-
-    var steps = det.steps || (blk.custom && blk.custom.steps);
-    if (steps && steps.length) {
-      html += "<h4>Steps</h4><ol>" + steps.map(li).join("") + "</ol>";
-    }
-
-    var yt = det.youtube || (blk.custom && blk.custom.youtube);
-    if (yt) html += '<a class="yt" href="' + yt + '" target="_blank" rel="noopener">▶ Watch how-to on YouTube</a>';
-
-    if (det.rainBackup) html += '<div class="rain">☔ <strong>Rain backup:</strong> ' + det.rainBackup + "</div>";
+    html += activityBodyHtml(det);
 
     html += '<button class="done-toggle' + (done[key] ? " is-done" : "") +
       '" data-key="' + key + '">' + (done[key] ? "✓ Done!" : "Mark as done") + "</button>";
@@ -189,6 +177,36 @@
     if (shop.have && shop.have.length) {
       html += "<h4>Gather from home</h4><ul>" + shop.have.map(li).join("") + "</ul>";
     }
+    sheetBody.innerHTML = html;
+    backdrop.classList.add("open");
+  }
+
+  function activityBodyHtml(det) {
+    var html = "";
+    var mats = det.materials;
+    if (mats) {
+      if (mats.have && mats.have.length) html += "<h4>Have at home</h4><ul>" + mats.have.map(li).join("") + "</ul>";
+      if (mats.buy && mats.buy.length) html += "<h4>To buy 🛒</h4><ul class='mat-buy'>" + mats.buy.map(li).join("") + "</ul>";
+    }
+    if (det.steps && det.steps.length) html += "<h4>Steps</h4><ol>" + det.steps.map(li).join("") + "</ol>";
+    if (det.youtube) html += '<a class="yt" href="' + det.youtube + '" target="_blank" rel="noopener">▶ Watch how-to on YouTube</a>';
+    if (det.rainBackup) html += '<div class="rain">☔ <strong>Rain backup:</strong> ' + det.rainBackup + "</div>";
+    return html;
+  }
+
+  function openChoice(blk, slot) {
+    var html = '<span class="tag slot-' + slot + '">' + (SLOT_NAMES[slot] || slot) + "</span>";
+    html += "<h3>" + (blk.title || "Choose one") + "</h3>";
+    html += '<div class="meta">' + blk.time + " · the girls pick one</div>";
+    if (blk.note) html += "<p>" + blk.note + "</p>";
+    if (blk.weatherNote) html += '<div class="rain">🌤️ ' + blk.weatherNote + "</div>";
+    (blk.options || []).forEach(function (id) {
+      var a = libById[id];
+      if (!a) return;
+      html += '<div class="opt"><div class="opt-h">' + a.title + "</div>";
+      html += '<div class="meta">' + [a.duration, a.energy ? a.energy + " energy" : ""].filter(Boolean).join(" · ") + "</div>";
+      html += activityBodyHtml(a) + "</div>";
+    });
     sheetBody.innerHTML = html;
     backdrop.classList.add("open");
   }

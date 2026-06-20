@@ -16,6 +16,7 @@
   --c-free: #f0922b;
   --c-fixed: #b9c2d6;
   --c-gym: #d64550;
+  --c-piano: #a3561d;
 }
 
 * { box-sizing: border-box; }
@@ -135,6 +136,7 @@ main { max-width: 760px; margin: 0 auto; padding: 14px 12px; }
 .slot-outdoor .stripe { background: var(--c-outdoor); } .tag.slot-outdoor { background: var(--c-outdoor); }
 .slot-free .stripe { background: var(--c-free); } .tag.slot-free { background: var(--c-free); }
 .slot-gym .stripe { background: var(--c-gym); } .tag.slot-gym { background: var(--c-gym); }
+.slot-piano .stripe { background: var(--c-piano); } .tag.slot-piano { background: var(--c-piano); }
 .block.fixed .stripe { background: var(--c-fixed); }
 
 /* ── Action bar ── */
@@ -181,6 +183,13 @@ main { max-width: 760px; margin: 0 auto; padding: 14px 12px; }
   display: inline-block; margin-top: 12px; background: #ff0000; color: #fff;
   text-decoration: none; padding: 10px 14px; border-radius: 10px; font-weight: 700; font-size: 14px;
 }
+.opt {
+  border: 1px solid #ececec; border-radius: 12px; padding: 12px 14px; margin: 12px 0;
+  background: #fcfbf7;
+}
+.opt-h { font-weight: 800; font-size: 16px; }
+.opt h4 { margin-top: 12px; }
+
 .done-toggle {
   margin-top: 18px; width: 100%; padding: 13px; border-radius: 12px; border: 2px solid var(--c-outdoor);
   background: #fff; color: var(--c-outdoor); font-weight: 700; font-size: 15px; cursor: pointer;
