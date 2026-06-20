@@ -25,6 +25,8 @@
   var controls = document.getElementById("controls");
   var backdrop = document.getElementById("sheetBackdrop");
   var sheetBody = document.getElementById("sheetBody");
+  var doit = document.getElementById("doit");
+  var doitReg = [], activeDoitClose = null;
 
   if (!WEEK || !WEEK.days) {
     app.innerHTML = '<p class="loading">No week is scheduled yet. Ask Claude to generate one!</p>';
@@ -222,7 +224,14 @@
     });
     document.getElementById("sheetClose").addEventListener("click", closeSheet);
     backdrop.addEventListener("click", function (e) { if (e.target === backdrop) closeSheet(); });
-    document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeSheet(); });
+    sheetBody.addEventListener("click", function (e) {
+      var s = e.target.closest(".doit-start");
+      if (s) openDoIt(doitReg[+s.getAttribute("data-doit")]);
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key !== "Escape") return;
+      if (activeDoitClose) activeDoitClose(); else closeSheet();
+    });
   }
 
   function openDetail(day, blk) {
@@ -244,6 +253,7 @@
     if (blk.weatherNote) html += '<div class="rain">🌤️ ' + blk.weatherNote + "</div>";
 
     html += activityBodyHtml(det);
+    if (det.steps && det.steps.length) html += startBtn(regDoit(det, title));
     html += ratingHtml(blk.activityId);
 
     html += '<button class="done-toggle' + (done[key] ? " is-done" : "") +
@@ -273,7 +283,7 @@
       if (!a) return;
       html += '<div class="opt"><div class="opt-h">' + a.title + (isLovedId(id) ? " ❤️" : "") + "</div>";
       html += '<div class="meta">' + [a.duration, a.energy ? a.energy + " energy" : ""].filter(Boolean).join(" · ") + "</div>";
-      html += activityBodyHtml(a) + ratingHtml(id) + "</div>";
+      html += activityBodyHtml(a) + (a.steps && a.steps.length ? startBtn(regDoit(a, a.title)) : "") + ratingHtml(id) + "</div>";
     });
     sheetBody.innerHTML = html;
     (blk.options || []).forEach(function (id) { wireRating(sheetBody, id); });
@@ -369,6 +379,66 @@
   }
 
   function closeSheet() { backdrop.classList.remove("open"); }
+
+  /* ───────────── "Do-it" mode — full-screen step-by-step ───────────── */
+  function regDoit(det, title) { doitReg.push({ det: det, title: title }); return doitReg.length - 1; }
+  function startBtn(k) { return '<button class="doit-start" data-doit="' + k + '">▶ Do it — step by step</button>'; }
+
+  function openDoIt(target) {
+    if (!target) return;
+    var steps = (target.det && target.det.steps) || [];
+    if (!steps.length) return;
+    var idx = 0, checked = [], sx = 0;
+
+    function render() {
+      var html = '<div class="doit-top"><span class="doit-title">' + target.title +
+        '</span><button class="doit-close" id="doitClose" aria-label="Close">✕</button></div>';
+      if (idx >= steps.length) {
+        html += '<div class="doit-body doit-done"><div class="doit-big">🎉 All done!</div>' +
+          "<p>Great job — high fives, then clean-up time.</p>" +
+          '<button class="doit-finish" id="doitFinish">Finish</button></div>';
+      } else {
+        html += '<div class="doit-dots">';
+        for (var i = 0; i < steps.length; i++) html += '<span class="dot' + (i === idx ? " cur" : "") + (checked[i] ? " ok" : "") + '"></span>';
+        html += "</div>";
+        html += '<div class="doit-count">Step ' + (idx + 1) + " of " + steps.length + "</div>";
+        html += '<div class="doit-body"><p class="doit-big">' + steps[idx] + "</p>" +
+          '<label class="doit-check' + (checked[idx] ? " on" : "") + '" id="doitCheck"><span class="box"></span> Mark this step done</label>' +
+          '<button class="doit-read" id="doitRead">🔊 Read aloud</button></div>';
+        html += '<div class="doit-nav">' +
+          '<button class="doit-btn back" id="doitBack"' + (idx === 0 ? " disabled" : "") + ">← Back</button>" +
+          '<button class="doit-btn next" id="doitNext">' + (idx === steps.length - 1 ? "Finish →" : "Next →") + "</button></div>";
+      }
+      doit.innerHTML = html;
+      wire();
+    }
+    function wire() {
+      bind("doitClose", close); bind("doitFinish", close);
+      bind("doitBack", function () { if (idx > 0) { idx--; render(); } });
+      bind("doitNext", function () { idx++; render(); });
+      bind("doitCheck", function () { checked[idx] = !checked[idx]; render(); });
+      bind("doitRead", function () { speak(steps[idx]); });
+    }
+    function bind(id, fn) { var el = document.getElementById(id); if (el) el.onclick = fn; }
+    function onStart(e) { sx = e.changedTouches[0].clientX; }
+    function onEnd(e) {
+      var dx = e.changedTouches[0].clientX - sx;
+      if (Math.abs(dx) > 50) { if (dx < 0 && idx < steps.length) { idx++; render(); } else if (dx > 0 && idx > 0) { idx--; render(); } }
+    }
+    function close() {
+      doit.classList.remove("open");
+      try { window.speechSynthesis.cancel(); } catch (e) {}
+      doit.removeEventListener("touchstart", onStart);
+      doit.removeEventListener("touchend", onEnd);
+      activeDoitClose = null;
+    }
+    doit.addEventListener("touchstart", onStart);
+    doit.addEventListener("touchend", onEnd);
+    activeDoitClose = close;
+    render();
+    doit.classList.add("open");
+  }
+  function speak(t) { try { window.speechSynthesis.cancel(); window.speechSynthesis.speak(new SpeechSynthesisUtterance(t)); } catch (e) {} }
 
   /* ───────────── favorites / rating ───────────── */
   function ratingHtml(id) {
