@@ -4,7 +4,8 @@ You are Roi's Dad Camp chief of staff. Build the schedule for the **upcoming Mon
 
 ## Steps
 1. Read `data/profile.js` (family, fixed slots, constraints), `data/library.js` (activities),
-   and `data/preferences.js` (loved/disliked — **weight toward loved, avoid disliked**).
+   `data/preferences.js` (loved/disliked — **weight toward loved, avoid disliked**), and
+   `data/events.js` (**one-off dated events** — birthdays, holidays, trips, appointments).
    Read the current `data/week.js` and the most recent files in `weeks/` to **avoid repeating**
    recent crafts/outings.
 2. Compute next week's Monday date. **Fetch the Cedar Park forecast** for Mon–Fri:
@@ -34,6 +35,12 @@ You are Roi's Dad Camp chief of staff. Build the schedule for the **upcoming Mon
   a parallel quiet free block for Yuval; keep 16:00–16:45 light; don't collide or overload Wednesday.
 - **2nd water/pool day = a CHOICE:** if water appears more than once in a week, make the second
   one a choice block (`options: ["out-pool","out-trampoline","out-waterplay"]`, no `activityId`).
+- **Special dates (`data/events.js`):** build AROUND any event that lands on a planned weekday —
+  don't schedule over a timed appointment; lighten or theme the day around a birthday/holiday/trip;
+  a trip day can be a `full-day-outing`. (The app overlays events automatically — no need to copy them into week.js.)
+- **Balance:** aim for a well-rounded week — ≥2 active days, ≥1 outing, the Friday Dad+Ariel 1-on-1,
+  a few **loved** activities, good type variety, screens only as the Friday movie. `node validate.js`
+  reports these.
 - **Weather-aware** (see step 2): plan outings on good-weather days; every outdoor block
   keeps a rain backup.
 - **Daily workbooks:** include `learn-workbooks` (Workbook Time, ~20 min) at the start of

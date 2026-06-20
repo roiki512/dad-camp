@@ -17,6 +17,7 @@
   --c-fixed: #b9c2d6;
   --c-gym: #d64550;
   --c-piano: #a3561d;
+  --c-event: #c026d3;
 }
 
 * { box-sizing: border-box; }
@@ -66,6 +67,20 @@ body {
   margin-left: auto; border: none; border-radius: 8px; padding: 7px 10px;
   font-size: 13px; font-weight: 600; background: rgba(255,255,255,.92); color: var(--navy-dark);
 }
+.picks-btn {
+  border: none; cursor: pointer; background: rgba(255,255,255,.12); color: #fff;
+  padding: 6px 12px; font-size: 13px; font-weight: 700; border-radius: 999px;
+}
+
+/* special-date event banner + block */
+.event-banner {
+  font-size: 13px; font-weight: 600; padding: 8px 16px; color: #fff;
+  background: linear-gradient(90deg, #c026d3, #7c3aed);
+}
+.event-banner.ev-holiday { background: linear-gradient(90deg, #d64550, #f0922b); }
+.event-banner.ev-birthday { background: linear-gradient(90deg, #e8589b, #f0922b); }
+.event-banner.ev-trip { background: linear-gradient(90deg, #2f6fd6, #1aa6a6); }
+.event-banner.ev-appointment { background: linear-gradient(90deg, #6b7280, #374151); }
 
 /* ── Day navigation ── */
 .daynav {
@@ -156,6 +171,7 @@ main { max-width: 760px; margin: 0 auto; padding: 14px 12px; }
 .slot-free .stripe { background: var(--c-free); } .tag.slot-free { background: var(--c-free); }
 .slot-gym .stripe { background: var(--c-gym); } .tag.slot-gym { background: var(--c-gym); }
 .slot-piano .stripe { background: var(--c-piano); } .tag.slot-piano { background: var(--c-piano); }
+.slot-event .stripe { background: var(--c-event); } .tag.slot-event { background: var(--c-event); }
 .block.fixed .stripe { background: var(--c-fixed); }
 
 /* ── Action bar ── */

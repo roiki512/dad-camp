@@ -8,6 +8,7 @@
   var PROFILE = window.DADCAMP_PROFILE || {};
   var PREFS = window.DADCAMP_PREFERENCES || { loved: [], disliked: [] };
   var WEEKS_INDEX = window.DADCAMP_WEEKS_INDEX || null;
+  var EVENTS = window.DADCAMP_EVENTS || [];
   var libById = {};
   LIB.forEach(function (a) { libById[a.id] = a; });
 
@@ -51,6 +52,7 @@
     html += '<button data-kid="both" class="active">👧👧 Both</button>';
     kids.forEach(function (n) { html += '<button data-kid="' + n + '">' + n + "</button>"; });
     html += "</div>";
+    html += '<button class="picks-btn" id="picksBtn">❤️ Picks</button>';
 
     if (WEEKS_INDEX && WEEKS_INDEX.length > 1) {
       html += '<select id="weekPick" class="weekpick">';
@@ -69,6 +71,7 @@
         renderDays();
       });
     });
+    document.getElementById("picksBtn").addEventListener("click", openPicks);
     var pick = document.getElementById("weekPick");
     if (pick) pick.addEventListener("change", function () {
       var v = pick.value;
@@ -132,9 +135,21 @@
         banner = '<div class="daytype-banner">' + (day.dayTypeLabel || prettyDayType(day.dayType)) + "</div>";
       }
 
-      var blocksHtml = '<div class="blocks">' +
-        (day.blocks || []).map(function (blk, j) { return renderBlock(day, i, blk, j, isToday); }).join("") +
-        "</div>";
+      // special-date events overlaid for this day
+      var dayEvents = EVENTS.filter(function (e) { return e.date === day.date; });
+      dayEvents.filter(function (e) { return !e.time; }).forEach(function (e) {
+        banner += '<div class="event-banner ev-' + (e.type || "event") + '">' + evIcon(e.type) + " <strong>" +
+          e.title + "</strong>" + (e.note ? " — " + e.note : "") + "</div>";
+      });
+
+      var items = (day.blocks || []).map(function (blk, j) {
+        return { start: toMin((blk.time || "0:0").split("-")[0]), html: renderBlock(day, i, blk, j, isToday) };
+      });
+      dayEvents.filter(function (e) { return e.time; }).forEach(function (e) {
+        items.push({ start: toMin(e.time.split("-")[0]), html: renderEventBlock(e) });
+      });
+      items.sort(function (a, b) { return a.start - b.start; });
+      var blocksHtml = '<div class="blocks">' + items.map(function (it) { return it.html; }).join("") + "</div>";
 
       sec.innerHTML = head + banner + blocksHtml;
       app.appendChild(sec);
@@ -181,11 +196,24 @@
       "</" + tagName + ">";
   }
 
+  function renderEventBlock(ev) {
+    var evi = EVENTS.indexOf(ev);
+    return '<button class="block slot-event" data-evi="' + evi + '">' +
+      '<span class="stripe"></span>' +
+      '<span class="time">' + ev.time + "</span>" +
+      '<span class="body"><span class="b-title"><span class="tag slot-event">' + (ev.type || "Event") + "</span>" +
+      evIcon(ev.type) + " " + ev.title + "</span>" +
+      (ev.note ? '<span class="b-sub">' + ev.note + "</span>" : "") +
+      '</span><span class="chev">›</span></button>';
+  }
+
   /* ───────────── detail sheet ───────────── */
   function wireSheet() {
     app.addEventListener("click", function (e) {
       var wx = e.target.closest(".wx");
       if (wx) { openWeather(ACTIVE.days[+wx.getAttribute("data-wx")]); return; }
+      var evb = e.target.closest(".slot-event[data-evi]");
+      if (evb) { openEventDetail(EVENTS[+evb.getAttribute("data-evi")]); return; }
       var b = e.target.closest(".block[data-di]");
       if (!b) return;
       var day = ACTIVE.days[+b.getAttribute("data-di")];
@@ -299,6 +327,47 @@
     backdrop.classList.add("open");
   }
 
+  function openEventDetail(ev) {
+    if (!ev) return;
+    var html = '<span class="tag slot-event">' + (ev.type || "Event") + "</span>";
+    html += "<h3>" + evIcon(ev.type) + " " + ev.title + "</h3>";
+    html += '<div class="meta">' + longDate(ev.date) + (ev.time ? " · " + ev.time : " · all day") + "</div>";
+    if (ev.note) html += "<p>" + ev.note + "</p>";
+    sheetBody.innerHTML = html;
+    backdrop.classList.add("open");
+  }
+
+  function openPicks() {
+    var loved = {}, disliked = {};
+    (PREFS.loved || []).forEach(function (id) { loved[id] = 1; });
+    (PREFS.disliked || []).forEach(function (id) { disliked[id] = 1; });
+    Object.keys(favs).forEach(function (id) {
+      if (favs[id] === 1) { loved[id] = 1; delete disliked[id]; }
+      if (favs[id] === -1) { disliked[id] = 1; delete loved[id]; }
+    });
+    var title = function (id) { return (libById[id] || {}).title || id; };
+    var html = '<span class="tag" style="background:#e8589b">Our picks</span><h3>What the girls love</h3>';
+    html += '<div class="meta">Tap ❤️ / 👎 on any activity to update these.</div>';
+    html += "<h4>❤️ Loved</h4><ul>" + (Object.keys(loved).length ? Object.keys(loved).map(function (id) { return li(title(id)); }).join("") : "<li>—</li>") + "</ul>";
+    if (Object.keys(disliked).length) html += "<h4>👎 Not their thing</h4><ul>" + Object.keys(disliked).map(function (id) { return li(title(id)); }).join("") + "</ul>";
+    var text = "Dad Camp ratings — loved: [" + Object.keys(loved).join(", ") + "]" +
+      (Object.keys(disliked).length ? "; disliked: [" + Object.keys(disliked).join(", ") + "]" : "") +
+      ". Please update data/preferences.js.";
+    html += '<button class="done-toggle" id="copyPicks">📋 Copy to send Claude (locks them into planning)</button>';
+    sheetBody.innerHTML = html;
+    document.getElementById("copyPicks").addEventListener("click", function () {
+      var btn = this;
+      function ok() { btn.textContent = "✓ Copied — paste it to Claude"; btn.classList.add("is-done"); }
+      if (navigator.clipboard) navigator.clipboard.writeText(text).then(ok, function () { fallbackCopy(text); ok(); });
+      else { fallbackCopy(text); ok(); }
+    });
+    backdrop.classList.add("open");
+  }
+  function fallbackCopy(t) {
+    var ta = document.createElement("textarea"); ta.value = t; document.body.appendChild(ta);
+    ta.select(); try { document.execCommand("copy"); } catch (e) {} document.body.removeChild(ta);
+  }
+
   function closeSheet() { backdrop.classList.remove("open"); }
 
   /* ───────────── favorites / rating ───────────── */
@@ -363,6 +432,7 @@
       "low-key": "🛋️ Low-Key Day", "gym-day": "🤸 Gymnastics Day",
       "no-car": "🚗 No-Car Day — staying local" }[t] || t;
   }
+  function evIcon(t) { return { holiday: "🎆", birthday: "🎂", trip: "✈️", appointment: "🩺", event: "🎉" }[t] || "🎉"; }
   function toMin(hm) { var p = hm.split(":"); return (+p[0]) * 60 + (+p[1] || 0); }
   function inNow(t) {
     var m = t.split("-"); var s = toMin(m[0]); var e = m[1] ? toMin(m[1]) : s + 30;
