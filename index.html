@@ -2,9 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#2c4a8a" />
   <title>Dad Camp 2026</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icon.svg" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Dad Camp" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -19,6 +23,7 @@
       </div>
       <div class="week-label" id="weekLabel">—</div>
     </div>
+    <div class="controls" id="controls"></div>
     <nav class="daynav" id="dayNav"></nav>
   </header>
 
@@ -27,8 +32,9 @@
   </main>
 
   <div class="actionbar">
-    <a id="icsBtn" class="btn" href="camp.ics" download>📅 Add to calendar (.ics)</a>
-    <button id="shopBtn" class="btn btn-ghost">🛒 Shopping list</button>
+    <a id="icsBtn" class="btn" href="camp.ics" download>📅 Calendar</a>
+    <button id="shopBtn" class="btn btn-ghost">🛒 Shopping</button>
+    <button id="printBtn" class="btn btn-ghost">🖨️ Print</button>
   </div>
 
   <!-- Detail sheet -->
@@ -41,7 +47,16 @@
 
   <script src="data/profile.js"></script>
   <script src="data/library.js"></script>
+  <script src="data/preferences.js"></script>
+  <script src="data/weeks-index.js"></script>
   <script src="data/week.js"></script>
   <script src="app.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("sw.js").catch(function () {});
+      });
+    }
+  </script>
 </body>
 </html>

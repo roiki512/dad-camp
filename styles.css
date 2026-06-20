@@ -51,6 +51,22 @@ body {
   max-width: 45%;
 }
 
+/* ── Controls bar (kid filter + week picker) ── */
+.controls {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 8px 12px; background: var(--navy-dark);
+}
+.seg { display: inline-flex; background: rgba(255,255,255,.12); border-radius: 999px; padding: 3px; }
+.seg button {
+  border: none; cursor: pointer; background: transparent; color: #fff;
+  padding: 6px 12px; font-size: 13px; font-weight: 700; border-radius: 999px;
+}
+.seg button.active { background: #ffd34d; color: var(--navy-dark); }
+.weekpick {
+  margin-left: auto; border: none; border-radius: 8px; padding: 7px 10px;
+  font-size: 13px; font-weight: 600; background: rgba(255,255,255,.92); color: var(--navy-dark);
+}
+
 /* ── Day navigation ── */
 .daynav {
   display: flex; gap: 6px; overflow-x: auto; padding: 8px 12px;
@@ -121,6 +137,9 @@ main { max-width: 760px; margin: 0 auto; padding: 14px 12px; }
 .block .b-sub { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
 .block .chev { color: #bbb; align-self: center; }
 .block.done .b-title { text-decoration: line-through; color: var(--muted); }
+.block.now { outline: 2px solid #ffd34d; background: #fffdf2; }
+.now-dot { display: block; color: #c98a00; font-weight: 800; font-size: 10px; letter-spacing: .3px; }
+.fav-badge { font-size: 12px; }
 .tag {
   display: inline-block; font-size: 10px; font-weight: 700; text-transform: uppercase;
   letter-spacing: .3px; padding: 2px 7px; border-radius: 999px; color: #fff; margin-right: 6px;
@@ -190,6 +209,31 @@ main { max-width: 760px; margin: 0 auto; padding: 14px 12px; }
 .opt-h { font-weight: 800; font-size: 16px; }
 .opt h4 { margin-top: 12px; }
 
+.rate {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 8px;
+  margin-top: 16px; padding-top: 14px; border-top: 1px solid #f0ece0;
+}
+.rate-label { font-size: 13px; color: var(--muted); margin-right: 2px; width: 100%; }
+.rate-btn {
+  border: 2px solid #e6e6e6; background: #fff; border-radius: 999px;
+  padding: 8px 14px; font-size: 14px; font-weight: 700; cursor: pointer; color: var(--ink);
+}
+.rate-btn.love.on { border-color: #e8589b; background: #ffe6f2; }
+.rate-btn.meh.on { border-color: #999; background: #eee; }
+
+.check { list-style: none; padding: 0; margin: 6px 0; }
+.check li {
+  position: relative; padding: 9px 6px 9px 30px; border-bottom: 1px solid #f0ece0;
+  cursor: pointer; line-height: 1.35;
+}
+.check li .box {
+  position: absolute; left: 2px; top: 9px; width: 18px; height: 18px;
+  border: 2px solid #bbb; border-radius: 5px;
+}
+.check li.checked { color: var(--muted); text-decoration: line-through; }
+.check li.checked .box { background: var(--c-outdoor); border-color: var(--c-outdoor); }
+.check li.checked .box::after { content: "✓"; color: #fff; font-size: 13px; position: absolute; left: 2px; top: -3px; }
+
 .done-toggle {
   margin-top: 18px; width: 100%; padding: 13px; border-radius: 12px; border: 2px solid var(--c-outdoor);
   background: #fff; color: var(--c-outdoor); font-weight: 700; font-size: 15px; cursor: pointer;
@@ -222,4 +266,24 @@ main { max-width: 760px; margin: 0 auto; padding: 14px 12px; }
   .block .b-sub { font-size: 11px; }
   .block .chev { display: none; }
   .tag { display: inline-block; font-size: 9px; padding: 1px 5px; margin-bottom: 3px; }
+}
+
+/* ── Print / PDF — clean one-page week ── */
+@media print {
+  .controls, .daynav, .actionbar, .sheet-backdrop, .week-label,
+  .tagline, .wx, .chev, .now-dot { display: none !important; }
+  body { background: #fff; color: #000; padding: 0; }
+  .topbar { position: static; box-shadow: none; background: #fff; color: #000; }
+  .topbar h1, .topbar h1 span { color: #000; }
+  main { max-width: 100%; padding: 0; margin: 0; }
+  #app { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; align-items: start; }
+  .day { box-shadow: none; border: 1px solid #bbb; margin: 0; break-inside: avoid; page-break-inside: avoid; }
+  .day.is-today { outline: none; }
+  .block { border: none; padding: 3px 4px; margin: 2px 0; flex-wrap: wrap; }
+  .block.fixed { opacity: 1; }
+  .block .time { width: 100%; flex: 1 1 100%; font-size: 9px; }
+  .block .b-title { font-size: 10px; }
+  .block .b-sub { display: none; }
+  .tag { font-size: 8px; }
+  @page { size: landscape; margin: 8mm; }
 }

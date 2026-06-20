@@ -1,0 +1,13 @@
+{
+  "name": "Dad Camp 2026",
+  "short_name": "Dad Camp",
+  "description": "The girls' daily camp schedule",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fdf8ec",
+  "theme_color": "#2c4a8a",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

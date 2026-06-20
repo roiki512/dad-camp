@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#2c4a8a"/>
+  <circle cx="146" cy="150" r="58" fill="#ffd34d"/>
+  <g fill="#fff">
+    <path d="M256 196l150 120H106z"/>
+    <rect x="150" y="300" width="212" height="92" rx="10"/>
+  </g>
+  <rect x="236" y="330" width="40" height="62" fill="#5cb338"/>
+  <text x="256" y="468" font-family="Arial, sans-serif" font-size="74" font-weight="bold"
+        fill="#ffd34d" text-anchor="middle">CAMP</text>
+</svg>
