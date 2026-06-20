@@ -8,13 +8,25 @@ that keep it filled and email you a heads-up.
 
 | File | What it is |
 |---|---|
-| `index.html`, `app.js`, `styles.css` | The web app (mobile-first weekly view) |
-| `data/profile.js` | The family, fixed slots, resources, constraints — **set your city here** |
+| `index.html`, `app.js`, `styles.css` | The web app (mobile-first; installable PWA, works offline) |
+| `data/profile.js` | The family, fixed slots, resources, constraints (incl. city for weather) |
 | `data/library.js` | ~50 activities (materials + steps / YouTube) the generator picks from |
+| `data/preferences.js` | What the girls love / dislike — the planner weights toward loved |
 | `data/week.js` | The current week — **regenerated every Saturday** |
+| `weeks/*.js`, `data/weeks-index.js` | Past weeks (archive) + the in-app week picker |
+| `validate.js` | Guardrail "lint" the planner runs and self-corrects against |
 | `camp.ics` | Calendar file — open it to add the week to Google/Apple Calendar |
+| `manifest.webmanifest`, `sw.js`, `icon.svg` | PWA install + offline support |
 | `automation/weekly-routine.md` | Prompt for the Saturday "build next week" routine |
 | `automation/daily-brief.md` | Prompt for the 6:30am weekday "today" routine |
+
+## App features
+
+- **Weekly view** — stacked day cards on phone, Mon–Fri columns on desktop.
+- **Per-kid filter** (Both / Yuval / Ariel), **weather chip** per day (tap → hourly), **"now" highlight** + auto-scroll to today.
+- **Tap any activity** for materials, steps/YouTube, rain backup; **❤️/👎 rate** it (loved activities show a ❤️ and steer planning).
+- **🛒 checkable shopping list**, **🖨️ print/PDF** view, **📅 .ics** download, **week picker** (once history builds up).
+- **Add to Home Screen** → installs like an app and works with no signal.
 
 ## How it works
 

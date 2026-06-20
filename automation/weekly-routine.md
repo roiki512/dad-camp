@@ -3,22 +3,25 @@
 You are Roi's Dad Camp chief of staff. Build the schedule for the **upcoming Mon–Fri**.
 
 ## Steps
-1. Read `data/profile.js` (family, fixed slots, resources, constraints) and
-   `data/library.js` (activity options). Read the last 1–2 `data/week.js` you can find
-   in git history to **avoid repeating** recent crafts/outings.
+1. Read `data/profile.js` (family, fixed slots, constraints), `data/library.js` (activities),
+   and `data/preferences.js` (loved/disliked — **weight toward loved, avoid disliked**).
+   Read the current `data/week.js` and the most recent files in `weeks/` to **avoid repeating**
+   recent crafts/outings.
 2. Compute next week's Monday date. **Fetch the Cedar Park forecast** for Mon–Fri:
    `https://api.open-meteo.com/v1/forecast?latitude=30.5052&longitude=-97.8203&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&hourly=temperature_2m,precipitation_probability,weather_code&temperature_unit=fahrenheit&timezone=America/Chicago&start_date=<Mon>&end_date=<Fri>`
    Store each day's weather in `week.js` as `weather:{icon,label,high,low,pop,hourly:[{t,temp,pop,ic}]}`
-   (daytime 08:00–20:00, every 2h). Map WMO codes to emoji (0☀️ 1🌤️ 2⛅ 3☁️ 45/48🌫️ 51-55🌦️ 61-65🌧️ 80/81🌦️ 82/95/96/99⛈️).
-3. Build 5 day objects (Mon–Fri) **weather-aware**: no hikes/outdoor-heavy outings on
-   rainy/stormy days; on hot dry days favor water (pool/backyard water) and keep the
-   hottest afternoon indoors/shaded.
-3. Fill the five open slots + Free/Family per the rules below. Most days = `standard`,
-   but include variety: aim for ~1 outing day and consider a `full-day-outing` if it fits.
-4. Write `data/week.js` (overwrite) with the new week, and regenerate `camp.ics` to match.
-5. Build the `shoppingList` (deduped; split buy vs have-at-home).
-6. Commit and push (site auto-deploys via GitHub Pages).
-7. **Email Roi** (roikirshenboim@gmail.com): subject "Dad Camp — week of <date> is ready",
+   (daytime 08:00–20:00, every 2h). WMO→emoji: 0☀️ 1🌤️ 2⛅ 3☁️ 45/48🌫️ 51-55🌦️ 61-65🌧️ 80/81🌦️ 82/95/96/99⛈️.
+3. Build 5 day objects (Mon–Fri), **weather-aware** and following ALL rules below. Most days
+   `standard`; include variety (aim for ~1 outing day; Thursday stays `no-car`).
+4. **Archive the outgoing week first:** copy the current `data/week.js` to `weeks/<its-weekOf>.js`
+   wrapped as `window.DADCAMP_SET_ARCHIVE && window.DADCAMP_SET_ARCHIVE({ …week… });`, and in
+   `data/weeks-index.js` mark it `current:false` + add the new week as `current:true`.
+5. Write `data/week.js` (overwrite, match the structure exactly) and regenerate `camp.ics`.
+   Build the `shoppingList` (deduped; split buy vs have-at-home).
+6. **Validate & self-correct:** run `node validate.js`. Fix every ERROR and re-run until it
+   exits clean (0). Address warnings where sensible.
+7. Commit and push (site auto-deploys via GitHub Pages).
+8. **Email Roi** (roikirshenboim@gmail.com): subject "Dad Camp — week of <date> is ready",
    body = a short day-by-day summary + the shopping list + the site link.
 
 ## Rules (hard)
