@@ -16,8 +16,6 @@ window.DADCAMP_WEEK = {
         { t: "16:00", temp: 96, pop: 0, ic: "☀️" }, { t: "18:00", temp: 95, pop: 0, ic: "☀️" },
         { t: "20:00", temp: 88, pop: 1, ic: "☀️" } ] },
       blocks: [
-        { time: "09:00-09:15", slot: "get-ready", title: "Get Ready", note: "dress, teeth, make beds", fixed: true },
-        { time: "09:15-09:45", slot: "breakfast", title: "Breakfast", fixed: true },
         { time: "09:45-10:15", slot: "morning-walk", title: "Morning Walk", fixed: true },
         { time: "10:15-10:35", slot: "learning", title: "Workbook Time", activityId: "learn-workbooks" },
         { time: "10:35-11:00", slot: "learning", title: "Read-Aloud + Story Talk", activityId: "learn-readaloud" },
@@ -39,8 +37,6 @@ window.DADCAMP_WEEK = {
         { t: "16:00", temp: 96, pop: 0, ic: "☀️" }, { t: "18:00", temp: 95, pop: 0, ic: "☀️" },
         { t: "20:00", temp: 90, pop: 1, ic: "🌤️" } ] },
       blocks: [
-        { time: "09:00-09:15", slot: "get-ready", title: "Get Ready", note: "dress, teeth, make beds", fixed: true },
-        { time: "09:15-09:45", slot: "breakfast", title: "Breakfast", fixed: true },
         { time: "09:45-10:15", slot: "morning-walk", title: "Morning Walk", fixed: true },
         { time: "10:15-10:35", slot: "learning", title: "Workbook Time", activityId: "learn-workbooks" },
         { time: "10:35-11:00", slot: "learning", title: "Math War (card game)", activityId: "learn-mathwar" },
@@ -64,8 +60,6 @@ window.DADCAMP_WEEK = {
         { t: "16:00", temp: 96, pop: 3, ic: "☀️" }, { t: "18:00", temp: 95, pop: 3, ic: "☀️" },
         { t: "20:00", temp: 90, pop: 4, ic: "☀️" } ] },
       blocks: [
-        { time: "09:00-09:15", slot: "get-ready", title: "Get Ready", note: "dress, teeth, make beds", fixed: true },
-        { time: "09:15-09:45", slot: "breakfast", title: "Breakfast", fixed: true },
         { time: "09:45-10:15", slot: "morning-walk", title: "Morning Walk", fixed: true },
         { time: "10:15-10:35", slot: "learning", title: "Workbook Time", activityId: "learn-workbooks" },
         { time: "10:35-11:00", slot: "learning", title: "Hebrew Copywork + Word Hunt", activityId: "learn-hebrew-copywork" },
@@ -93,8 +87,6 @@ window.DADCAMP_WEEK = {
         { t: "16:00", temp: 96, pop: 2, ic: "⛅" }, { t: "18:00", temp: 96, pop: 2, ic: "🌤️" },
         { t: "20:00", temp: 91, pop: 2, ic: "🌤️" } ] },
       blocks: [
-        { time: "09:00-09:15", slot: "get-ready", title: "Get Ready", note: "dress, teeth, make beds", fixed: true },
-        { time: "09:15-09:45", slot: "breakfast", title: "Breakfast", fixed: true },
         { time: "09:45-10:15", slot: "morning-walk", title: "Morning Walk", fixed: true },
         { time: "10:15-10:35", slot: "learning", title: "Workbook Time", activityId: "learn-workbooks" },
         { time: "10:35-11:00", slot: "learning", title: "Comic-Strip Journal (writing)", activityId: "learn-journal-comic" },
@@ -116,8 +108,6 @@ window.DADCAMP_WEEK = {
         { t: "16:00", temp: 98, pop: 3, ic: "🌤️" }, { t: "18:00", temp: 96, pop: 3, ic: "🌤️" },
         { t: "20:00", temp: 91, pop: 2, ic: "🌤️" } ] },
       blocks: [
-        { time: "09:00-09:15", slot: "get-ready", title: "Get Ready", note: "dress, teeth, make beds", fixed: true },
-        { time: "09:15-09:45", slot: "breakfast", title: "Breakfast", fixed: true },
         { time: "09:45-10:15", slot: "morning-walk", title: "Morning Walk", fixed: true },
         { time: "10:15-10:35", slot: "learning", title: "Workbook Time", activityId: "learn-workbooks" },
         { time: "10:35-11:00", slot: "learning", title: "Baking-Soda Volcano (science)", activityId: "learn-science-volcano" },

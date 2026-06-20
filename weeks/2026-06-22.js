@@ -62,19 +62,6 @@ window.DADCAMP_SET_ARCHIVE && window.DADCAMP_SET_ARCHIVE(
    },
    "blocks": [
     {
-     "time": "09:00-09:15",
-     "slot": "get-ready",
-     "title": "Get Ready",
-     "note": "dress, teeth, make beds",
-     "fixed": true
-    },
-    {
-     "time": "09:15-09:45",
-     "slot": "breakfast",
-     "title": "Breakfast",
-     "fixed": true
-    },
-    {
      "time": "09:45-10:15",
      "slot": "morning-walk",
      "title": "Morning Walk",
@@ -189,19 +176,6 @@ window.DADCAMP_SET_ARCHIVE && window.DADCAMP_SET_ARCHIVE(
     ]
    },
    "blocks": [
-    {
-     "time": "09:00-09:15",
-     "slot": "get-ready",
-     "title": "Get Ready",
-     "note": "dress, teeth, make beds",
-     "fixed": true
-    },
-    {
-     "time": "09:15-09:45",
-     "slot": "breakfast",
-     "title": "Breakfast",
-     "fixed": true
-    },
     {
      "time": "09:45-10:15",
      "slot": "morning-walk",
@@ -332,19 +306,6 @@ window.DADCAMP_SET_ARCHIVE && window.DADCAMP_SET_ARCHIVE(
     ]
    },
    "blocks": [
-    {
-     "time": "09:00-09:15",
-     "slot": "get-ready",
-     "title": "Get Ready",
-     "note": "dress, teeth, make beds",
-     "fixed": true
-    },
-    {
-     "time": "09:15-09:45",
-     "slot": "breakfast",
-     "title": "Breakfast",
-     "fixed": true
-    },
     {
      "time": "09:45-10:15",
      "slot": "morning-walk",
@@ -497,19 +458,6 @@ window.DADCAMP_SET_ARCHIVE && window.DADCAMP_SET_ARCHIVE(
    },
    "blocks": [
     {
-     "time": "09:00-09:15",
-     "slot": "get-ready",
-     "title": "Get Ready",
-     "note": "dress, teeth, make beds",
-     "fixed": true
-    },
-    {
-     "time": "09:15-09:45",
-     "slot": "breakfast",
-     "title": "Breakfast",
-     "fixed": true
-    },
-    {
      "time": "09:45-10:15",
      "slot": "morning-walk",
      "title": "Morning Walk",
@@ -629,19 +577,6 @@ window.DADCAMP_SET_ARCHIVE && window.DADCAMP_SET_ARCHIVE(
     ]
    },
    "blocks": [
-    {
-     "time": "09:00-09:15",
-     "slot": "get-ready",
-     "title": "Get Ready",
-     "note": "dress, teeth, make beds",
-     "fixed": true
-    },
-    {
-     "time": "09:15-09:45",
-     "slot": "breakfast",
-     "title": "Breakfast",
-     "fixed": true
-    },
     {
      "time": "09:45-10:15",
      "slot": "morning-walk",
