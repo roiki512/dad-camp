@@ -1,6 +1,6 @@
 /* Dad Camp service worker — offline support via stale-while-revalidate.
    Bump CACHE when you want clients to refresh the precache. */
-var CACHE = "dadcamp-v3";
+var CACHE = "dadcamp-v4";
 var CORE = [
   "./", "./index.html", "./styles.css", "./app.js",
   "./data/profile.js", "./data/library.js", "./data/preferences.js",

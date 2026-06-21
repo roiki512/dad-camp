@@ -28,6 +28,7 @@
   var sheetBody = document.getElementById("sheetBody");
   var doit = document.getElementById("doit");
   var doitReg = [], activeDoitClose = null;
+  var mem = document.getElementById("mem");
 
   if (!WEEK || !WEEK.days) {
     app.innerHTML = '<p class="loading">No week is scheduled yet. Ask Claude to generate one!</p>';
@@ -56,6 +57,7 @@
     kids.forEach(function (n) { html += '<button data-kid="' + n + '">' + n + "</button>"; });
     html += "</div>";
     html += '<button class="picks-btn" id="picksBtn">❤️ Picks</button>';
+    html += '<button class="picks-btn" id="memBtn">📸 Memories</button>';
 
     if (WEEKS_INDEX && WEEKS_INDEX.length > 1) {
       html += '<select id="weekPick" class="weekpick">';
@@ -75,6 +77,7 @@
       });
     });
     document.getElementById("picksBtn").addEventListener("click", openPicks);
+    document.getElementById("memBtn").addEventListener("click", openMemories);
     var pick = document.getElementById("weekPick");
     if (pick) pick.addEventListener("change", function () {
       var v = pick.value;
@@ -395,6 +398,92 @@
   }
 
   function closeSheet() { backdrop.classList.remove("open"); }
+
+  /* ───────────── Memories journal (photo + note per day, stored in IndexedDB) ───────────── */
+  function idb(cb) {
+    try {
+      var req = indexedDB.open("dadcamp-mem", 1);
+      req.onupgradeneeded = function (e) { var db = e.target.result; if (!db.objectStoreNames.contains("mem")) db.createObjectStore("mem", { keyPath: "id" }); };
+      req.onsuccess = function (e) { cb(e.target.result); };
+      req.onerror = function () { cb(null); };
+    } catch (e) { cb(null); }
+  }
+  function memAll(cb) { idb(function (db) { if (!db) return cb([]); var r = db.transaction("mem", "readonly").objectStore("mem").getAll(); r.onsuccess = function () { cb(r.result || []); }; r.onerror = function () { cb([]); }; }); }
+  function memPut(rec, cb) { idb(function (db) { if (!db) return cb && cb(); var t = db.transaction("mem", "readwrite"); t.objectStore("mem").put(rec); t.oncomplete = function () { cb && cb(); }; }); }
+  function memDel(id, cb) { idb(function (db) { if (!db) return cb && cb(); var t = db.transaction("mem", "readwrite"); t.objectStore("mem").delete(id); t.oncomplete = function () { cb && cb(); }; }); }
+
+  function openMemories() {
+    mem.classList.add("open");
+    activeDoitClose = function () { mem.classList.remove("open"); activeDoitClose = null; };
+    renderMemories();
+  }
+  function renderMemories() {
+    var head = '<div class="mem-top"><span class="mem-h">📸 Camp Memories</span>' +
+      '<button class="doit-close" id="memClose" aria-label="Close">✕</button></div>';
+    var form = '<div class="mem-form">' +
+      '<input type="date" id="memDate" value="' + todayISO + '" />' +
+      '<label class="mem-photo">📷 Add photo<input type="file" id="memFile" accept="image/*" capture="environment" hidden /></label>' +
+      '<input type="text" id="memNote" placeholder="One line about today…" maxlength="140" />' +
+      '<button class="mem-save" id="memSave">Save memory</button>' +
+      '<span class="mem-filename" id="memFn"></span></div>';
+    mem.innerHTML = head + form + '<div class="mem-actions"><button class="mem-export" id="memExport">⬇ Back up all (save to Drive)</button></div><div class="mem-gallery" id="memGallery">Loading…</div>';
+
+    document.getElementById("memClose").onclick = function () { mem.classList.remove("open"); activeDoitClose = null; };
+    var fileInput = document.getElementById("memFile"), chosen = null;
+    var fnEl = document.getElementById("memFn");
+    fileInput.onchange = function () { chosen = fileInput.files[0] || null; fnEl.textContent = chosen ? "✓ photo ready" : ""; };
+    document.getElementById("memSave").onclick = function () {
+      var note = document.getElementById("memNote").value.trim();
+      var date = document.getElementById("memDate").value || todayISO;
+      if (!chosen && !note) return;
+      memPut({ id: Date.now() + "-" + Math.random().toString(36).slice(2, 6), date: date, note: note, blob: chosen, type: chosen ? chosen.type : "" }, function () {
+        renderMemories();
+      });
+    };
+    document.getElementById("memExport").onclick = exportMemories;
+
+    memAll(function (list) {
+      list.sort(function (a, b) { return (b.date || "").localeCompare(a.date || "") || (b.id > a.id ? 1 : -1); });
+      var g = document.getElementById("memGallery");
+      if (!list.length) { g.innerHTML = '<p class="mem-empty">No memories yet — snap a photo from today and add a line. 📷</p>'; return; }
+      g.innerHTML = list.map(function (m) {
+        var img = m.blob ? '<img src="' + URL.createObjectURL(m.blob) + '" alt="" />' : "";
+        return '<div class="mem-card">' + img + '<div class="mem-meta"><strong>' + longDate(m.date) + "</strong>" +
+          (m.note ? "<p>" + escapeHtml(m.note) + "</p>" : "") +
+          '<button class="mem-del" data-id="' + m.id + '">🗑 Remove</button></div></div>';
+      }).join("");
+      g.querySelectorAll(".mem-del").forEach(function (b) {
+        b.onclick = function () { memDel(b.getAttribute("data-id"), renderMemories); };
+      });
+    });
+  }
+  function exportMemories() {
+    memAll(function (list) {
+      if (!list.length) return;
+      list.sort(function (a, b) { return (a.date || "").localeCompare(b.date || ""); });
+      var done = 0, out = [];
+      list.forEach(function (m, i) {
+        if (!m.blob) { out[i] = { date: m.date, note: m.note, url: "" }; if (++done === list.length) build(); return; }
+        var fr = new FileReader();
+        fr.onload = function () { out[i] = { date: m.date, note: m.note, url: fr.result }; if (++done === list.length) build(); };
+        fr.onerror = function () { out[i] = { date: m.date, note: m.note, url: "" }; if (++done === list.length) build(); };
+        fr.readAsDataURL(m.blob);
+      });
+      function build() {
+        var html = '<!doctype html><html><head><meta charset="utf-8"><title>Dad Camp Memories</title>' +
+          '<style>body{font-family:-apple-system,Segoe UI,sans-serif;max-width:680px;margin:0 auto;padding:18px;background:#fdf8ec}' +
+          'h1{color:#2c4a8a}img{max-width:100%;border-radius:14px}.m{margin:22px 0;padding-bottom:18px;border-bottom:2px solid #efe7d2}h3{margin:6px 0;color:#2c4a8a}</style></head><body>' +
+          "<h1>🏕️ Dad Camp 2026 — Memories</h1>" +
+          out.map(function (x) { return '<div class="m"><h3>' + longDate(x.date) + "</h3>" + (x.url ? '<img src="' + x.url + '">' : "") + (x.note ? "<p>" + escapeHtml(x.note) + "</p>" : "") + "</div>"; }).join("") +
+          "</body></html>";
+        var a = document.createElement("a");
+        a.href = URL.createObjectURL(new Blob([html], { type: "text/html" }));
+        a.download = "dad-camp-memories.html";
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      }
+    });
+  }
+  function escapeHtml(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
 
   /* ───────────── "Do-it" mode — full-screen step-by-step ───────────── */
   function regDoit(det, title) { doitReg.push({ det: det, title: title }); return doitReg.length - 1; }
