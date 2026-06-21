@@ -16,8 +16,9 @@
     learning: "Learning", main: "Main Activity", quiet: "Quiet Time",
     afternoon: "Afternoon", outdoor: "Outdoor", free: "Free / Family", gym: "Gymnastics", piano: "Piano"
   };
-  var DONE_KEY = "dadcamp-done", FAV_KEY = "dadcamp-favs";
-  var done = loadJSON(DONE_KEY), favs = loadJSON(FAV_KEY);
+  var DONE_KEY = "dadcamp-done", FAV_KEY = "dadcamp-favs", OVR_KEY = "dadcamp-overrides";
+  var done = loadJSON(DONE_KEY), favs = loadJSON(FAV_KEY), overrides = loadJSON(OVR_KEY);
+  var DRIVE_IDS = ["aft-urbanair", "aft-pottery-studio", "aft-museum"];
 
   var app = document.getElementById("app");
   var dayNav = document.getElementById("dayNav");
@@ -162,16 +163,20 @@
     // per-kid filter
     if (filterKid !== "both" && blk.kid && blk.kid !== filterKid) return "";
 
-    var det = resolve(blk);
+    var det = effDet(day, blk);
+    var overridden = isOverridden(day, blk);
     var slot = blk.slot || "fixed";
     var isFixed = !!blk.fixed || (!det && !blk.title);
     var key = doneKey(day.date, blk.time, slot);
     var clickable = !isFixed;
-    var loved = isLoved(blk);
+    var loved = isLovedId(effId(day, blk)) || (blk.options || []).some(isLovedId);
+    var titleText = overridden ? (det.title || "Activity") : (blk.title || (det && det.title) || "Activity");
 
     var sub;
     if (blk.options) {
       sub = "Pick one: " + blk.options.map(function (id) { return (libById[id] || {}).title || id; }).join(" · ");
+    } else if (overridden) {
+      sub = (det && det.location ? capitalize(det.location) + (det.duration ? " · " + det.duration : "") : "") + " · swapped 🔄";
     } else {
       sub = blk.note || (det && det.location ? capitalize(det.location) + (det.duration ? " · " + det.duration : "") : "");
     }
@@ -191,7 +196,7 @@
       '<span class="stripe"></span>' +
       '<span class="time">' + (nowMark ? '<span class="now-dot">● now</span>' : "") + blk.time + "</span>" +
       '<span class="body">' +
-      '<span class="b-title">' + tag + (blk.title || (det && det.title) || "Activity") + " " + heart + "</span>" +
+      '<span class="b-title">' + tag + titleText + " " + heart + "</span>" +
       (sub ? '<span class="b-sub">' + sub + "</span>" : "") +
       "</span>" +
       (clickable ? '<span class="chev">›</span>' : "") +
@@ -237,11 +242,14 @@
   function openDetail(day, blk) {
     var slot = blk.slot || "main";
     if (blk.options) { openChoice(blk, slot); return; }
-    var det = resolve(blk) || {};
-    var title = blk.title || det.title || "Activity";
+    var det = effDet(day, blk) || {};
+    var eid = effId(day, blk);
+    var overridden = isOverridden(day, blk);
+    var title = overridden ? (det.title || "Activity") : (blk.title || det.title || "Activity");
     var key = doneKey(day.date, blk.time, slot);
 
-    var html = '<span class="tag slot-' + slot + '">' + (SLOT_NAMES[slot] || slot) + "</span>";
+    var html = '<span class="tag slot-' + slot + '">' + (SLOT_NAMES[slot] || slot) +
+      (overridden ? " · swapped 🔄" : "") + "</span>";
     html += "<h3>" + title + "</h3>";
     var metaBits = [blk.time];
     if (det.duration) metaBits.push(det.duration);
@@ -249,18 +257,26 @@
     if (det.energy) metaBits.push(det.energy + " energy");
     html += '<div class="meta">' + metaBits.join(" · ") + "</div>";
 
-    if (blk.note) html += "<p>" + blk.note + "</p>";
+    if (blk.note && !overridden) html += "<p>" + blk.note + "</p>";
     if (blk.weatherNote) html += '<div class="rain">🌤️ ' + blk.weatherNote + "</div>";
 
     html += activityBodyHtml(det);
     if (det.steps && det.steps.length) html += startBtn(regDoit(det, title));
-    html += ratingHtml(blk.activityId);
+    if (canSwap(blk)) {
+      html += '<div class="swap-row"><button class="swap-btn" id="swapBtn">🔄 Swap for another</button>' +
+        (overridden ? '<button class="swap-reset" id="swapReset">↩ Original</button>' : "") + "</div>";
+    }
+    html += ratingHtml(eid);
 
     html += '<button class="done-toggle' + (done[key] ? " is-done" : "") +
       '" data-key="' + key + '">' + (done[key] ? "✓ Done!" : "Mark as done") + "</button>";
 
     sheetBody.innerHTML = html;
-    wireRating(sheetBody, blk.activityId);
+    wireRating(sheetBody, eid);
+    var sb = document.getElementById("swapBtn");
+    if (sb) sb.addEventListener("click", function () { swapActivity(day, blk); renderDays(); openDetail(day, blk); });
+    var sr = document.getElementById("swapReset");
+    if (sr) sr.addEventListener("click", function () { resetBlock(day, blk); renderDays(); openDetail(day, blk); });
     var btn = sheetBody.querySelector(".done-toggle");
     btn.addEventListener("click", function () {
       done[key] = !done[key];
@@ -491,6 +507,41 @@
     if (blk.custom) return blk.custom;
     return null;
   }
+  // effective activity id for a block (honors a user "swap" override)
+  function blockKey(day, blk) { return day.date + "|" + blk.time + "|" + (blk.slot || ""); }
+  function effId(day, blk) {
+    var k = blockKey(day, blk);
+    return (overrides[k] && libById[overrides[k]]) ? overrides[k] : blk.activityId;
+  }
+  function effDet(day, blk) {
+    var id = effId(day, blk);
+    return (id && libById[id]) ? libById[id] : resolve(blk);
+  }
+  function isOverridden(day, blk) { var k = blockKey(day, blk); return overrides[k] && overrides[k] !== blk.activityId; }
+  function canSwap(blk) { return !!blk.activityId && !blk.options && !blk.fixed; }
+
+  function swapActivity(day, blk) {
+    var curId = effId(day, blk), cur = libById[curId];
+    if (!cur) return;
+    var slot = cur.slot, noCar = day.dayType === "no-car";
+    var used = {};
+    ACTIVE.days.forEach(function (d) { d.blocks.forEach(function (b) { var id = effId(d, b); if (id) used[id] = 1; }); });
+    var cands = LIB.filter(function (a) {
+      if (a.slot !== slot || a.id === curId) return false;
+      if ((PREFS.disliked || []).indexOf(a.id) !== -1) return false;
+      if (noCar && DRIVE_IDS.indexOf(a.id) !== -1) return false;
+      return true;
+    });
+    var fresh = cands.filter(function (a) { return !used[a.id]; });
+    var pool = fresh.length ? fresh : cands;
+    if (!pool.length) return;
+    var lovedPool = pool.filter(function (a) { return isLovedId(a.id); });
+    var pick = (lovedPool.length && Math.random() < 0.5) ? rand(lovedPool) : rand(pool);
+    overrides[blockKey(day, blk)] = pick.id;
+    saveJSON(OVR_KEY, overrides);
+  }
+  function resetBlock(day, blk) { delete overrides[blockKey(day, blk)]; saveJSON(OVR_KEY, overrides); }
+  function rand(a) { return a[Math.floor(Math.random() * a.length)]; }
   function li(s) { return "<li>" + s + "</li>"; }
   function checkLi(s) { return '<li><span class="box"></span>' + s + "</li>"; }
   function doneKey(date, time, slot) { return date + "|" + time + "|" + slot; }

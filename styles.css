@@ -250,8 +250,18 @@ main { max-width: 760px; margin: 0 auto; padding: 14px 12px; }
 .check li.checked .box { background: var(--c-outdoor); border-color: var(--c-outdoor); }
 .check li.checked .box::after { content: "✓"; color: #fff; font-size: 13px; position: absolute; left: 2px; top: -3px; }
 
+.swap-row { display: flex; gap: 8px; margin-top: 12px; }
+.swap-btn {
+  flex: 1; padding: 12px; border-radius: 12px; border: 2px solid var(--c-afternoon);
+  background: #fff; color: var(--c-afternoon); font-size: 15px; font-weight: 800; cursor: pointer;
+}
+.swap-reset {
+  flex: 0 0 auto; padding: 12px 14px; border-radius: 12px; border: 2px solid #ccc;
+  background: #fff; color: var(--muted); font-size: 14px; font-weight: 700; cursor: pointer;
+}
+
 .done-toggle {
-  margin-top: 18px; width: 100%; padding: 13px; border-radius: 12px; border: 2px solid var(--c-outdoor);
+  margin-top: 12px; width: 100%; padding: 13px; border-radius: 12px; border: 2px solid var(--c-outdoor);
   background: #fff; color: var(--c-outdoor); font-weight: 700; font-size: 15px; cursor: pointer;
 }
 .done-toggle.is-done { background: var(--c-outdoor); color: #fff; }
