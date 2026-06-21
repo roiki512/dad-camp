@@ -28,6 +28,7 @@ var errors = [], warns = [];
 function err(s) { errors.push(s); }
 function warn(s) { warns.push(s); }
 function idsOf(b) { return b.activityId ? [b.activityId] : (b.options || []); }
+function toMin(t) { var p = (t || "0:0").split("-")[0].split(":"); return (+p[0]) * 60 + (+p[1] || 0); }
 
 if (!WEEK || !WEEK.days) { console.log("ERROR: no week object found in " + target); process.exit(1); }
 
@@ -78,9 +79,23 @@ mainCrafts.filter(function (c, i) { return mainCrafts.indexOf(c) !== i; }).forEa
 
 // solo reading must be 1–2 days after a library visit
 soloDayIdx.forEach(function (s) {
-  if (!libDayIdx.some(function (l) { return s - l >= 1 && s - l <= 2; }))
+  if (libDayIdx.length && !libDayIdx.some(function (l) { return s - l >= 1 && s - l <= 2; }))
     err(days[s].weekday + ": solo reading not 1–2 days after a library visit");
 });
+
+// NO reading-of-books (read-aloud or solo reading) before the library visit
+var READING = ["learn-readaloud", "quiet-soloreading"];
+if (libDayIdx.length) {
+  var libDay = libDayIdx[0], libStart = 0;
+  days[libDay].blocks.forEach(function (b) { if (b.activityId === "aft-library") libStart = toMin(b.time); });
+  days.forEach(function (d, i) {
+    d.blocks.forEach(function (b) {
+      if (READING.indexOf(b.activityId) === -1) return;
+      if (i < libDay) err(d.weekday + ": reading ('" + b.activityId + "') is BEFORE the library day (" + days[libDay].weekday + ") — put reading on/after it");
+      else if (i === libDay && toMin(b.time) < libStart) err(d.weekday + ": reading ('" + b.activityId + "') is earlier in the day than the library trip — move it after");
+    });
+  });
+}
 
 // 2nd water/pool day should be a choice
 if (fixedWaterDays.length >= 2) warn("2+ fixed water days (" + fixedWaterDays.join(", ") + ") — make the 2nd a choice block (options)");

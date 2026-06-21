@@ -76,8 +76,8 @@ window.DADCAMP_SET_ARCHIVE && window.DADCAMP_SET_ARCHIVE(
     {
      "time": "10:35-11:00",
      "slot": "learning",
-     "title": "Read-Aloud + Story Talk",
-     "activityId": "learn-readaloud"
+     "title": "Math War (card game)",
+     "activityId": "learn-mathwar"
     },
     {
      "time": "11:00-12:30",
@@ -191,8 +191,9 @@ window.DADCAMP_SET_ARCHIVE && window.DADCAMP_SET_ARCHIVE(
     {
      "time": "10:35-11:00",
      "slot": "learning",
-     "title": "Math War (card game)",
-     "activityId": "learn-mathwar"
+     "title": "Read-Aloud + Story Talk (fresh library books)",
+     "activityId": "learn-readaloud",
+     "note": "new books from Monday's library trip"
     },
     {
      "time": "11:00-12:30",
@@ -209,9 +210,8 @@ window.DADCAMP_SET_ARCHIVE && window.DADCAMP_SET_ARCHIVE(
     {
      "time": "13:15-14:00",
      "slot": "quiet",
-     "title": "Cozy Solo Reading (fresh library books!)",
-     "activityId": "quiet-soloreading",
-     "note": "books picked up at Monday's library trip"
+     "title": "Jigsaw Puzzle",
+     "activityId": "quiet-puzzle"
     },
     {
      "time": "14:00-16:00",
@@ -339,8 +339,9 @@ window.DADCAMP_SET_ARCHIVE && window.DADCAMP_SET_ARCHIVE(
     {
      "time": "13:15-14:00",
      "slot": "quiet",
-     "title": "Jigsaw Puzzle",
-     "activityId": "quiet-puzzle"
+     "title": "Cozy Solo Reading",
+     "activityId": "quiet-soloreading",
+     "note": "fresh books from Monday's library trip"
     },
     {
      "time": "14:00-16:00",
