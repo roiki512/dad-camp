@@ -430,24 +430,34 @@
       '<button class="doit-close" id="memClose" aria-label="Close">✕</button></div>';
     var form = '<div class="mem-form">' +
       '<input type="date" id="memDate" value="' + todayISO + '" />' +
-      '<label class="mem-photo">📷 Add photo<input type="file" id="memFile" accept="image/*" capture="environment" hidden /></label>' +
-      '<input type="text" id="memNote" placeholder="One line about today…" maxlength="140" />' +
+      '<label class="mem-photo">📷 Add photo(s)<input type="file" id="memFile" accept="image/*" multiple hidden /></label>' +
+      '<input type="text" id="memNote" placeholder="One line about that day…" maxlength="140" />' +
       '<button class="mem-save" id="memSave">Save memory</button>' +
       '<span class="mem-filename" id="memFn"></span></div>';
     var driveBtn = (window.DadCampDrive && DadCampDrive.signedIn()) ? '<button class="mem-export" id="memDrive">☁️ Back up to Drive</button>' : "";
     mem.innerHTML = head + form + '<div class="mem-actions">' + driveBtn + '<button class="mem-export" id="memExport">⬇ Download backup (HTML)</button></div><div class="mem-gallery" id="memGallery">Loading…</div>';
 
     document.getElementById("memClose").onclick = function () { mem.classList.remove("open"); activeDoitClose = null; };
-    var fileInput = document.getElementById("memFile"), chosen = null;
+    var fileInput = document.getElementById("memFile");
     var fnEl = document.getElementById("memFn");
-    fileInput.onchange = function () { chosen = fileInput.files[0] || null; fnEl.textContent = chosen ? "✓ photo ready" : ""; };
+    fileInput.onchange = function () {
+      var n = fileInput.files.length;
+      fnEl.textContent = n ? ("✓ " + n + " photo" + (n > 1 ? "s" : "") + " ready") : "";
+    };
     document.getElementById("memSave").onclick = function () {
       var note = document.getElementById("memNote").value.trim();
       var date = document.getElementById("memDate").value || todayISO;
-      if (!chosen && !note) return;
-      memPut({ id: Date.now() + "-" + Math.random().toString(36).slice(2, 6), date: date, note: note, blob: chosen, type: chosen ? chosen.type : "" }, function () {
-        renderMemories();
-      });
+      var files = Array.prototype.slice.call(fileInput.files);
+      if (!files.length && !note) return;
+      if (!files.length) {
+        return memPut({ id: uid(), date: date, note: note, blob: null, type: "" }, renderMemories);
+      }
+      var i = 0;
+      (function next() {
+        if (i >= files.length) return renderMemories();
+        var f = files[i];
+        memPut({ id: uid(), date: date, note: i === 0 ? note : "", blob: f, type: f.type }, function () { i++; next(); });
+      })();
     };
     document.getElementById("memExport").onclick = exportMemories;
     var md = document.getElementById("memDrive");
@@ -495,6 +505,7 @@
     });
   }
   function escapeHtml(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function uid() { return Date.now() + "-" + Math.random().toString(36).slice(2, 8); }
 
   /* ───────────── Google Drive sync (favorites + memories) ───────────── */
   function initDrive() {
