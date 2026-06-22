@@ -9,6 +9,7 @@
   var PREFS = window.DADCAMP_PREFERENCES || { loved: [], disliked: [] };
   var WEEKS_INDEX = window.DADCAMP_WEEKS_INDEX || null;
   var EVENTS = window.DADCAMP_EVENTS || [];
+  var CONFIG = window.DADCAMP_CONFIG || {};
   var libById = {};
   LIB.forEach(function (a) { libById[a.id] = a; });
 
@@ -47,6 +48,7 @@
   document.getElementById("shopBtn").addEventListener("click", openShoppingList);
   var printBtn = document.getElementById("printBtn");
   if (printBtn) printBtn.addEventListener("click", function () { window.print(); });
+  initDrive();
 
   /* ───────────── controls: kid filter + week picker ───────────── */
   function buildControls() {
@@ -58,6 +60,7 @@
     html += "</div>";
     html += '<button class="picks-btn" id="picksBtn">❤️ Picks</button>';
     html += '<button class="picks-btn" id="memBtn">📸 Memories</button>';
+    if (CONFIG.googleClientId) html += '<button class="picks-btn" id="syncBtn">☁️ Sign in</button>';
 
     if (WEEKS_INDEX && WEEKS_INDEX.length > 1) {
       html += '<select id="weekPick" class="weekpick">';
@@ -78,6 +81,11 @@
     });
     document.getElementById("picksBtn").addEventListener("click", openPicks);
     document.getElementById("memBtn").addEventListener("click", openMemories);
+    var syncB = document.getElementById("syncBtn");
+    if (syncB) syncB.addEventListener("click", function () {
+      if (window.DadCampDrive && DadCampDrive.signedIn()) { pullFavs(function () { renderDays(); pushFavs(); }); toast("☁️ Synced"); }
+      else if (window.DadCampDrive) DadCampDrive.signIn();
+    });
     var pick = document.getElementById("weekPick");
     if (pick) pick.addEventListener("change", function () {
       var v = pick.value;
@@ -426,7 +434,8 @@
       '<input type="text" id="memNote" placeholder="One line about today…" maxlength="140" />' +
       '<button class="mem-save" id="memSave">Save memory</button>' +
       '<span class="mem-filename" id="memFn"></span></div>';
-    mem.innerHTML = head + form + '<div class="mem-actions"><button class="mem-export" id="memExport">⬇ Back up all (save to Drive)</button></div><div class="mem-gallery" id="memGallery">Loading…</div>';
+    var driveBtn = (window.DadCampDrive && DadCampDrive.signedIn()) ? '<button class="mem-export" id="memDrive">☁️ Back up to Drive</button>' : "";
+    mem.innerHTML = head + form + '<div class="mem-actions">' + driveBtn + '<button class="mem-export" id="memExport">⬇ Download backup (HTML)</button></div><div class="mem-gallery" id="memGallery">Loading…</div>';
 
     document.getElementById("memClose").onclick = function () { mem.classList.remove("open"); activeDoitClose = null; };
     var fileInput = document.getElementById("memFile"), chosen = null;
@@ -441,6 +450,8 @@
       });
     };
     document.getElementById("memExport").onclick = exportMemories;
+    var md = document.getElementById("memDrive");
+    if (md) md.onclick = function () { md.textContent = "Backing up…"; memToDrive(function (ok, msg) { md.textContent = "☁️ Back up to Drive"; toast(msg); }); };
 
     memAll(function (list) {
       list.sort(function (a, b) { return (b.date || "").localeCompare(a.date || "") || (b.id > a.id ? 1 : -1); });
@@ -484,6 +495,56 @@
     });
   }
   function escapeHtml(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+
+  /* ───────────── Google Drive sync (favorites + memories) ───────────── */
+  function initDrive() {
+    if (!CONFIG.googleClientId || !window.DadCampDrive) return;
+    DadCampDrive.init(CONFIG.googleClientId, onDriveAuth);
+  }
+  function onDriveAuth(signed) {
+    updateSyncBtn(signed);
+    if (signed) pullFavs(function () { renderDays(); pushFavs(); });
+  }
+  function updateSyncBtn(signed) {
+    var b = document.getElementById("syncBtn");
+    if (b) b.textContent = signed ? "☁️ Synced" : "☁️ Sign in";
+  }
+  function favsToPrefs() {
+    var loved = [], dis = [];
+    Object.keys(favs).forEach(function (id) { if (favs[id] === 1) loved.push(id); else if (favs[id] === -1) dis.push(id); });
+    return { loved: loved, disliked: dis, updated: new Date().toISOString() };
+  }
+  function pushFavs() {
+    if (!window.DadCampDrive || !DadCampDrive.signedIn()) return;
+    DadCampDrive.saveJson(CONFIG.favoritesFile || "dadcamp-favorites.json", favsToPrefs()).catch(function () {});
+  }
+  function pullFavs(cb) {
+    if (!window.DadCampDrive || !DadCampDrive.signedIn()) { if (cb) cb(); return; }
+    DadCampDrive.readJson(CONFIG.favoritesFile || "dadcamp-favorites.json").then(function (d) {
+      if (d) { (d.loved || []).forEach(function (id) { favs[id] = 1; }); (d.disliked || []).forEach(function (id) { favs[id] = -1; }); saveJSON(FAV_KEY, favs); }
+      if (cb) cb();
+    }).catch(function () { if (cb) cb(); });
+  }
+  function memToDrive(cb) {
+    if (!window.DadCampDrive || !DadCampDrive.signedIn()) return cb && cb(false, "Sign in first");
+    DadCampDrive.ensureFolder(CONFIG.memoriesFolder || "Dad Camp Memories").then(function (folderId) {
+      memAll(function (list) {
+        var todo = list.filter(function (m) { return m.blob && !m.driveDone; }), i = 0, count = 0;
+        (function next() {
+          if (i >= todo.length) return cb && cb(true, count ? (count + " photo(s) backed up to Drive") : "Already up to date");
+          var m = todo[i++];
+          DadCampDrive.uploadImage(folderId, (m.date || "memory") + "-" + m.id + ".jpg", m.blob)
+            .then(function () { m.driveDone = true; memPut(m); count++; next(); }, function () { next(); });
+        })();
+      });
+    }, function () { cb && cb(false, "Drive error"); });
+  }
+  function toast(msg) {
+    var t = document.createElement("div"); t.className = "toast"; t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(function () { t.classList.add("show"); }, 10);
+    setTimeout(function () { t.classList.remove("show"); setTimeout(function () { t.remove(); }, 300); }, 2200);
+  }
 
   /* ───────────── "Do-it" mode — full-screen step-by-step ───────────── */
   function regDoit(det, title) { doitReg.push({ det: det, title: title }); return doitReg.length - 1; }
@@ -564,6 +625,7 @@
         var v = +btn.getAttribute("data-v");
         favs[id] = (favs[id] === v) ? 0 : v;
         saveJSON(FAV_KEY, favs);
+        pushFavs();
         box.querySelectorAll(".rate-btn").forEach(function (b) { b.classList.remove("on"); });
         if (favs[id] === 1) box.querySelector(".love").classList.add("on");
         if (favs[id] === -1) box.querySelector(".meh").classList.add("on");
